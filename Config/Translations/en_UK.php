@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Peoplegogo - UK',
+    'title' => 'FrameworkJet - UK',
     'menu' => 'Menu',
     'submenu' => 'Submenu',
     'mainmenu' => [

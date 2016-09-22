@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Peoplegogo - ES',
+    'title' => 'FrameworkJet - ES',
     'menu' => 'Menú',
     'submenu' => 'Submenú',
     'mainmenu' => [
