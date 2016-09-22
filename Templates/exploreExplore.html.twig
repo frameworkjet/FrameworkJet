@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+    {{ include('exploreExploreTemplateSubmenu.html.twig') }}
+
+    {{ description }}
+
+    <div id="ajax-content"></div>
+    <button class="pg-action" data="explore-button-test">{{ trans.button.clickme }}</button>
+{% endblock %}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    {# TO DO: Maybe we will have to minimize and the CSS #}
+    <style type="text/css" src="/css/custom.css"></style>
+
+    {% block head %}
+        <title>{{ trans.title }}</title>
+    {% endblock %}
+</head>
+<body>
+<p>{{ trans.menu }}</p>
+<ul>
+    <li><a href="/">{{ trans.mainmenu.home }}</a></li>
+    <li><a href="/explore">{{ trans.mainmenu.explore }}</a></li>
+    <li><a href="/contact-us">{{ trans.mainmenu.contactus }}</a></li>
+</ul>
+<div id="content">{% block content %}{% endblock %}</div>
+<div id="footer">
+    <select class="lang-switcher" id="lang-switcher">
+        <option value="en_UK" {% if lang == "en_UK" %}selected="selected"{% endif %}>English (UK)</option>
+        <option value="es_ES" {% if lang == "es_ES" %}selected="selected"{% endif %}>Español</option>
+    </select>
+    <div>&copy; {{ trans.copyright }} by FrameworkJet</div>
+</div>
+
+{# TO DO: Minimize the JS #}
+<script type="text/javascript" src="/js/lib/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="/js/lib/handlebars-4.0.5.min.js"></script>
+<script type="text/javascript" src="/js/lib/router.js"></script>
+<script type="text/javascript" src="/js/lib/dataManager.js"></script>
+
+<script type="text/javascript" src="/js/controllers/homeController.js"></script>
+<script type="text/javascript" src="/js/controllers/exploreController.js"></script>
+<script type="text/javascript" src="/js/controllers/pageController.js"></script>
+<script type="text/javascript" src="/js/templates.js"></script>
+<script type="text/javascript" src="/js/routes.js"></script>
+<script type="text/javascript" src="/js/app.js"></script>
+
+<script type="text/javascript" src="/js/translations/en_UK.js"></script>
+<script type="text/javascript" src="/js/translations/es_ES.js"></script>
+
+{# <script type="text/javascript" src="/js/lib.min.js"></script> #}
+</body>
+</html>

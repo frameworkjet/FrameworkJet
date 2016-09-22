@@ -1,0 +1,13 @@
+{
+	"name": "frameworkjet/frameworkjet",
+	"description": "Example web application based on FrameworkJet",
+	"license": "proprietary",
+	"require": {
+		"monolog/monolog": "^1.21",
+		"twig/twig": "~1.0",
+		"phpmailer/phpmailer": "~5.2"
+    },
+	"autoload": {
+		"psr-0": { "App": "." }
+	}
+}
