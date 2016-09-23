@@ -49,6 +49,13 @@ module.exports = function(grunt) {
                 }
             }
         },
+		sass: {
+			dist: {
+				files: {
+					'./public/css/style.css': './public/css/style.scss'
+				}
+			}
+		},
         clean: {
             contents: ['./cache/*']
         }
@@ -59,5 +66,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-handlebars');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-less');
+	grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-clean');
 }

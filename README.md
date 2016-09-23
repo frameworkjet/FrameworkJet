@@ -6,35 +6,56 @@ FrameworkJet is a web application framework created to cover the following requi
 - The framework must be **as light as possible**, without additional heavy libraries and dependencies. It's up to you to add external libraries and helpers depending on your particular needs.
 - The framework must support **server-side rendering** of the content if we request it.
 - The framework must support **client-side rendering** of the content via a communication with an API.
+- The framework must support **multilingual** templating.
 
+**Table of Contents**
+- [Used technologies](#used-technologies)
+- [Server requirements](#server-requirements)
+- [Installation](#installation)
+  - [Checkout](#checkout)
+  - [Services](#services)
+  - [Configuration](#configuration)
+    - [Back-end application](#back-end-application)
+		- [Framework](#framework)
+		- [Third-party services](#third-party-services)
+		- [Cache](#cache)
+		- [Database](#database)
+	- [Front-end application](#front-end-application)
+  - [File permissions](#file-permissions)
+  - [Web service](#web-service)
+	- [Nginx](#nginx)
+	- [Apache](#apache)
+  - [Additional configurations (optional)](#additional-configurations-optional)
+	- [CRON tasks](#cron-tasks)
+- [Structure of the framework and development](#structure-of-the-framework-and-development)
+  - [Structure of the framework](#structure-of-the-framework)
+  - [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+	
 # Used technologies
 For the covering of the above-mentioned requirements the following technologies and libraries have been used:
 
 **Front-end:**
-
-*JavaScript:*
-- jQuery
-- JS app (router /Url: [http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url](http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url)/, controllers, data manager, template engine, translations). The purpose of this javascript application is to render the content on the client-side.
-
-*Templates:*
-- HTML5
-- CSS3
-- LESS
-- Bootstrap (Url: [http://getbootstrap.com/](http://getbootstrap.com/))
-- Handlebars (Url: [http://handlebarsjs.com/](http://handlebarsjs.com/))
+- JavaScript:
+	- jQuery
+	- JS app (router /Url: [http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url](http://krasimirtsonev.com/blog/article/A-modern-JavaScript-router-in-100-lines-history-api-pushState-hash-url)/, controllers, data manager, template engine, translations). The purpose of this javascript application is to render the content on the client-side. The reason is to have an application with a reasonable loading speed.
+- Templates:
+	- HTML5
+	- CSS3
+	- LESS or SASS
+	- Handlebars (Url: [http://handlebarsjs.com/](http://handlebarsjs.com/))
 
 **Back-end:**
-
-*Core:*
-- PHP core based on APIJet framework (Url: [https://github.com/APIJet/APIJet/tree/master](https://github.com/APIJet/APIJet/tree/master))
-- Memcached (Url: [http://php.net/manual/en/book.memcached.php](http://php.net/manual/en/book.memcached.php))
-- Monolog (Url: [https://github.com/Seldaek/monolog](https://github.com/Seldaek/monolog))
-- PHPMailer (Url: [https://github.com/PHPMailer/PHPMailer](https://github.com/PHPMailer/PHPMailer))
-
-*Templates:*
-- Bootstrap, HTML5
-- Twig *(php template engine)* (Url: [http://twig.sensiolabs.org/](http://twig.sensiolabs.org/))
-- Translations
+- Core:
+	- PHP core based on APIJet framework (Url: [https://github.com/APIJet/APIJet/tree/master](https://github.com/APIJet/APIJet/tree/master))
+	- Memcached (Url: [http://php.net/manual/en/book.memcached.php](http://php.net/manual/en/book.memcached.php))
+	- Monolog (Url: [https://github.com/Seldaek/monolog](https://github.com/Seldaek/monolog))
+	- PHPMailer (Url: [https://github.com/PHPMailer/PHPMailer](https://github.com/PHPMailer/PHPMailer))
+- Templates:
+	- HTML5
+	- Twig *(php template engine)* (Url: [http://twig.sensiolabs.org/](http://twig.sensiolabs.org/))
+	- Translations
 
 **Server-side services:**
 - composer
@@ -43,6 +64,7 @@ For the covering of the above-mentioned requirements the following technologies 
 - npm task "handlebars" used for precompilation of the handlebar templates
 - npm task "uglify" used for javascript minimization
 - npm task "less" used for the compilation of LESS to CSS
+- npm task "sass" used for the compilation of SASS to CSS
 - npm task "clean" used to clean the cache directory used by Twig *(php template engine)*
 
 # Server requirements
@@ -52,7 +74,7 @@ The framework has a few system requirements. You will need to make sure your ser
 - PDO PHP Extension
 
 # Installation
-To install the framework, follow the steps below. 
+To install the framework, follow the steps below. During the installation we will use commands used in Unix based system, but for the sake of the detailed explanation, we have given a few example for Windows based systems.
 
 ## Checkout
 The first step is to checkout the project on your machine. In our case this most probably means to use the following command *(you will need Git)*:
@@ -86,15 +108,15 @@ Example:
 Save and close. 
 
 Now we will have to install the following services:
-- composer, follow the instructions from here [https://getcomposer.org/doc/00-intro.md](https://getcomposer.org/doc/00-intro.md) or the instructions from here [https://www.digitalocean.com/community/tutorials/how-to-install-and-use-composer-on-ubuntu-14-04 ](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-composer-on-ubuntu-14-04 )
-- npm, follow the instructions from here: [https://github.com/npm/npm](https://github.com/npm/npm)
-- grunt, follow the instructions from here: [http://gruntjs.com/getting-started](http://gruntjs.com/getting-started)
-
-also the following npm tasks for grunt are required: 
-- uglify, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-uglify](https://github.com/gruntjs/grunt-contrib-uglify )
-- handlebars, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-handlebars](https://github.com/gruntjs/grunt-contrib-handlebars) 
-- less, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-less](https://github.com/gruntjs/grunt-contrib-less) 
-- clean, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-clean](https://github.com/gruntjs/grunt-contrib-clean)
+- **composer**, follow the instructions from here [https://getcomposer.org/doc/00-intro.md](https://getcomposer.org/doc/00-intro.md) or the instructions from here [https://www.digitalocean.com/community/tutorials/how-to-install-and-use-composer-on-ubuntu-14-04 ](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-composer-on-ubuntu-14-04 )
+- **npm**, follow the instructions from here: [https://github.com/npm/npm](https://github.com/npm/npm)
+- **grunt**, follow the instructions from here: [http://gruntjs.com/getting-started](http://gruntjs.com/getting-started)
+- also the following npm tasks for grunt are required: 
+	- **uglify**, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-uglify](https://github.com/gruntjs/grunt-contrib-uglify )
+	- **handlebars**, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-handlebars](https://github.com/gruntjs/grunt-contrib-handlebars) 
+	- **less**, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-less](https://github.com/gruntjs/grunt-contrib-less) 
+	- **sass**, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-sass](https://github.com/gruntjs/grunt-contrib-sass)
+	- **clean**, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-clean](https://github.com/gruntjs/grunt-contrib-clean)
 
 Sometimes during the installation of grunt and the npm tasks it is possible to encounter errors and missing dependencies. A possible solution is to delete the folder “node_modules” and to start the process of installation again.
 ```
@@ -102,7 +124,7 @@ rm -R node_modules/
 ```
 
 ## Configuration
-After the installation the framework, you should finish configures of the files listed below.
+After the installation of the framework, you should finish the configures of the files listed below.
 
 ### Back-end application
 
@@ -186,7 +208,7 @@ chgrp -R www-data example/
 ## Web service
 
 ### Nginx
-If you use Nginx, look at the configuration below if you use SSL certificate for the encryption of the traffic:
+If you use Nginx, look at the configuration below. This configuration is for those cases when you use SSL certificate for the encryption of the traffic. Please take into account the root of your project, the domain names and the SSL certificates inside the configuration. You will have to change them for you application.
 ```
 server {
 	listen 80;
@@ -232,7 +254,7 @@ server {
 	}
 }
 ```
-Look at the configuration below if you don’t use SSL certificate for the encryption of the traffic:
+Look at the configuration below if you don’t use SSL certificate for the encryption of the traffic. Please take into account the root of your project and the domain names inside the configuration. You will have to change them for you application.
 ```
 server {
 	listen 80;
@@ -264,13 +286,13 @@ service nginx restart
 ```
 
 ### Apache
-If you want to run the application on Apache you will have to make sure to enable “mod_rewrite”. For Windows, go to the directory of the Apache installation and open the folder “conf”. Open the file httpd.conf and find the line:
+If you want to run the application on Apache you will have to make sure to enable “mod_rewrite” module. For Windows, go to the directory of the Apache installation and open the folder “conf”. Open the file *httpd.conf* and find the line:
 ```
 #LoadModule rewrite_module modules/mod_rewrite.so
 ```
 and uncomment it.
 
-Find all occurences of:
+Find all occurrences of:
 ```
 AllowOverride None
 ```
@@ -285,9 +307,9 @@ For Ubuntu you can check this short tutorial: [https://www.digitalocean.com/comm
 ## Additional configurations (optional)
 
 ### CRON tasks
-In the root directory of the framework you will find a folder named “Tasks“. The purpose of this folder is to contain php files which can be requested by CRON tasks on regular basis. For example, the file “SystemCheckForLogs.php” *(which most probably will be in the directory)* checks if there are errors logs generated during the last 36 hours and if there are, you can send email to the system administrator. You can also write your own logic *(to add different notification methods)*.
+In the root directory of the framework you will find a folder named “Tasks“. The purpose of this folder is to contain php files which can be requested by CRON tasks on regular basis. For example, the file “SystemCheckForLogs.php” *(which most probably will be in the directory)* checks if there are error logs generated during the last 36 hours and if there are, it sends an email to the system administrator with a detail report. You can also write your own logic *(to add different notification methods)*.
 
-For Ubuntu, if you want to set a CRON task for that specific file, go to the terminal and type:
+For Ubuntu, if you want to set up a CRON task for that specific file, go to the terminal and type:
 ```
 crontab -e
 ```
@@ -301,8 +323,10 @@ This will call the above-mentioned file on every 24 hours and it will generate r
 
 # Structure of the framework and development
 
-## Structure of the framework
-Before we even start with the development of our own application, we will need to know the purpose of each file part of the framework.
+More detail document will be provided in the future. At the moment for better understanding of the work of the framework, you will have to review the code and also to take into account the structure described below.
+
+## File structure
+Before we start with the development of our own application, we will need to know the purpose of each file and folder part of the framework.
 ```
 App/ - this is the core of the framework you don’t have to change anything here
 
@@ -326,17 +350,27 @@ Helpers/ - here are stored classes written by us, which execute specific tasks (
 
 logs/ - here are stored all error logs
 
+node_modules/ - packages installed by npm
+
 public/ - public directory
 
 	assets/ - assets like images, fonts, etc.
 
-	css/ - CSS and LESS files
+	css/ - CSS and LESS/SASS files
 
 	js/
 
 		controllers/ - here are all controllers used by the javascript application
 
 		lib/ - contains important javascript libraries like jquery, handlebars, routers, etc.
+			
+			dataManager.js - data manager used to executed AJAX requests to the API or other service
+			
+			handlebars.min.js - Handlebars front-end template engine
+			
+			jquery.min.js - jQuery
+			
+			router.js - Router
 		
 		translations/ - translations required by the javascript application
 		
@@ -369,9 +403,7 @@ Gruntfile.js - grunt configuration
 package.json - grunt configuration
 ```
 
-## Development
-
-More detail document will be provided in the future. At the moment for better understanding of the work of the framework, you will have to review the code and also to take into account the structure described above.
+## Task runners and package managers
 
 In addition, we will mention a few important things required during the development of your own application. First, the composer is used to update the packages required by the framework. To update to the most current versions, use this command:
 ```
@@ -382,27 +414,32 @@ Grunt and all npm tasks which we’ve already installed, have the following purp
 ```
 grunt less
 ```
-Compiles the LESS file /public/css/style.css and converts it to a the CSS file /public/css/style.css.
+Compiles the LESS file */public/css/style.less* and converts it to the CSS file */public/css/style.css*.
+
+```
+grunt sass
+```
+Compiles the SASS file */public/css/style.scss* and converts it to a the CSS file */public/css/style.css*.
 
 ```
 grunt uglify
 ```
-Takes all javascript files, minimize them and unites them into the file /public/js/lib.min.js.
+Takes all javascript files, minimize them and unites them in one single file named */public/js/lib.min.js*.
 
 ```
 grunt handlebars
 ```
-Takes all handlebar templates located in /public/templates and pre-compiles them. The pre-compiled templates are saved in /public/js/templates.js.
+Takes all handlebar templates located in *"/public/templates"* and pre-compiles them. The pre-compiled templates are saved in */public/js/templates.js*.
 
 ```
 grunt clean
 ```
-Cleans the content of folder “cache/”.
+Cleans the content of folder *“cache/”*.
 
 ```
 grunt
 ```
-Executes all above actions.
+Executes all npm tasks listed above.
 
 # Contributing
 How can you contribute:
