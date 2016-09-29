@@ -66,6 +66,7 @@ For the covering of the above-mentioned requirements the following technologies 
 - npm task "less" used for the compilation of LESS to CSS
 - npm task "sass" used for the compilation of SASS to CSS
 - npm task "clean" used to clean the cache directory used by Twig *(php template engine)*
+- npm task "watch" used to watch for changes in particular directories and files and if there are changes, it will automatically call the default grunt task which will call all other tasks (handlebars, uglify, less, sass, clean)*.
 
 # Server requirements
 The framework has a few system requirements. You will need to make sure your server meets them:
@@ -117,6 +118,7 @@ Now we will have to install the following services:
 	- **less**, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-less](https://github.com/gruntjs/grunt-contrib-less) 
 	- **sass**, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-sass](https://github.com/gruntjs/grunt-contrib-sass)
 	- **clean**, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-clean](https://github.com/gruntjs/grunt-contrib-clean)
+	- **watch**, follow the instructions from here: [https://github.com/gruntjs/grunt-contrib-watch](https://github.com/gruntjs/grunt-contrib-watch)
 
 Sometimes during the installation of grunt and the npm tasks it is possible to encounter errors and missing dependencies. A possible solution is to delete the folder “node_modules” and to start the process of installation again.
 ```
@@ -440,6 +442,11 @@ Cleans the content of folder *“cache/”*.
 grunt
 ```
 Executes all npm tasks listed above.
+
+```
+grunt watch
+```
+If you run this task in the terminal, grunt will start a script which will watch for changes in all directories and files which are related to all above tasks. If there are changes, the script will automatically run the default grunt task which on other hand will run all other tasks. As a consequence, all LESS/SASS files will be regenerated, all js files will be minified, all handlebars templates will be pre-complited, etc.
 
 # Contributing
 How can you contribute:

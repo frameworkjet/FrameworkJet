@@ -172,6 +172,12 @@ class App
     public static function run()
     {
         // Check if the request will match any of the routers rules.
+        if (!in_array(Request::getMethod(), Request::getHttpRequestsAllowed())) {
+            Response::setCode(404);
+            return;
+        }
+
+        // Check if the request will match any of the routers rules.
         $matchedResource = Router::getMatchedRouterResource(Request::getMethod(), Request::getCleanRequestUrl());
         if ($matchedResource === null) {
             Response::setCode(404);

@@ -58,6 +58,25 @@ module.exports = function(grunt) {
 		},
         clean: {
             contents: ['./cache/*']
+        },
+        watch: {
+            scripts: {
+                files: [
+                    './public/templates/*.handlebars',
+
+                    './public/js/lib/*.js',
+                    './public/js/controllers/*.js',
+                    './public/js/routes.js',
+                    './public/js/templates.js',
+                    './public/js/app.js',
+                    './public/js/translations/*.js',
+
+                    './public/css/style.css',
+
+                    './Templates/*'
+                ],
+                tasks: ['default']
+            }
         }
     });
 
@@ -68,4 +87,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-clean');
+
+    grunt.loadNpmTasks('grunt-contrib-watch');
 }
