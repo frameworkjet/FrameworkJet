@@ -10,9 +10,15 @@ class Request
     const DELETE = 'DELETE';
 
     private static $inputData = null;
-    private static $langsAllowed= [
+    private static $langsAllowed = [
         'en_UK',
         'es_ES'
+    ];
+    private static $httpRequestsAllowed = [
+        'GET',
+        'POST',
+        'PUT',
+        'DELETE'
     ];
 
 
@@ -82,6 +88,15 @@ class Request
     public static function getLang()
     {
         return isset($_GET['lang']) && in_array($_GET['lang'], self::$langsAllowed) ? $_GET['lang'] : (is_null($_SESSION['lang']) ? App::config('DEFAULT_LANGUAGE') : $_SESSION['lang']);
+    }
+
+    /**
+     * @desc Get the allowed HTTP Requests
+     * @return array
+     */
+    public static function getHttpRequestsAllowed()
+    {
+        return self::$httpRequestsAllowed;
     }
 
     /**
