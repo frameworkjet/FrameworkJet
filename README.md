@@ -30,6 +30,8 @@ FrameworkJet is a web application framework created to cover the following requi
 - [Structure of the framework and development](#structure-of-the-framework-and-development)
   - [Structure of the framework](#structure-of-the-framework)
   - [Development](#development)
+  - [Server-side](#server-side)
+  	- [Routing, Controllers and Templating](#routing-controllers-and-templating)
 - [Contributing](#contributing)
 - [License](#license)
 	
@@ -447,6 +449,32 @@ Executes all npm tasks listed above.
 grunt watch
 ```
 If you run this task in the terminal, grunt will start a script which will watch for changes in all directories and files which are related to all above tasks. If there are changes, the script will automatically run the default grunt task which on other hand will run all other tasks. As a consequence, all LESS/SASS files will be regenerated, all js files will be minified, all handlebars templates will be pre-complited, etc.
+
+## Server-side
+### Routing, Controllers and Templating
+The names of the controllers and the Twig templates must be chosen according to the routes defined inside */Config/Router.php*. For example, if we define the route:
+```
+'example-first-page' => [Router::GET, 'example\FirstPage'],
+```
+We must take into account:
+- The HTTP Request type */GET, DELETE, PUT, POST/*;
+- The strings *“example”* and *“FirstPage”*;
+
+They will require the following controller and template. In the folder */Controllers* we must create a new controller *(the word “example” with first capital letter)*:
+```
+ExampleController.php
+```
+With the following method *(the HTTP Request with lowercase letters and the word “FirstPage”)*:
+```
+getFirstPage()
+```
+In the folder */Templates* we must create the following template *(the word “example” and the word “FirstPage”)*:
+```
+exampleFirstPage.html.twig
+```
+When we request *URL/example-first-page*, the framework will check for the controllers, methods and templates with these names. If any of them is not defined, it will return an error.
+
+In the folder with Twig templates we can define other templates and macroses which can be included in any of the other templates according to the Twig rules.
 
 # Contributing
 How can you contribute:
