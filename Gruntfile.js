@@ -38,7 +38,7 @@ module.exports = function(grunt) {
         less: {
             production: {
                 options: {
-                    paths: ['assets/css']
+                    paths: ['./public/css']
                     /*plugins: [
                         new (require('less-plugin-autoprefix'))({browsers: ["last 2 versions"]}),
                         new (require('less-plugin-clean-css'))(cleanCssOptions)
@@ -49,13 +49,13 @@ module.exports = function(grunt) {
                 }
             }
         },
-		sass: {
-			dist: {
-				files: {
-					'./public/css/style.css': './public/css/style.scss'
-				}
+	sass: {
+		dist: {
+			files: {
+				'./public/css/style.css': './public/css/style.scss'
 			}
-		},
+		}
+	},
         clean: {
             contents: ['./cache/*']
         },
@@ -71,7 +71,7 @@ module.exports = function(grunt) {
                     './public/js/app.js',
                     './public/js/translations/*.js',
 
-                    './public/css/style.css',
+                    './public/css/style.less',
 
                     './Templates/*'
                 ],
@@ -85,7 +85,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-handlebars');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.loadNpmTasks('grunt-contrib-sass');
+    grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     grunt.loadNpmTasks('grunt-contrib-watch');
