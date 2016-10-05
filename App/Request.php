@@ -120,7 +120,6 @@ class Request
     }
     
     /**
-     * @return array
      * @desc Get all headers
      * @return array
      */
