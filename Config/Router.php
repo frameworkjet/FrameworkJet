@@ -4,7 +4,8 @@ use App\Router AS Router;
 
 return [
     'globalPattern' => [
-        ':id' => '\d+'
+        ':id' => '\d+',
+        ':path' => '[A-Za-z0-9\-\_]+'
     ],
     'routes' => [
         /*=============== ... ===============*/
