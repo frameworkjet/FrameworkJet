@@ -463,9 +463,9 @@ With the following method *(the HTTP Request with lowercase letters and the word
 ```
 getFirstPage()
 ```
-In the folder */Templates* we must create the following template *(the word “example” and the word “FirstPage”)*:
+In the folder */Templates* we must create the following sub-folder *(if it still not created)* and template *(the word “example” and the word “FirstPage”)*:
 ```
-exampleFirstPage.html.twig
+example/exampleFirstPage.html.twig
 ```
 When we request *URL/example-first-page*, the framework will check for the controllers, methods and templates with these names. If any of them is not defined, it will return an error.
 
