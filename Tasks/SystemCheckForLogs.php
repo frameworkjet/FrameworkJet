@@ -26,7 +26,7 @@ $from = date('Y-m-d H:i:s', strtotime('-36 hours', time()));
 
 // Check if there are files created today and if yes, send email notification to the system administrator
 $created_files = shell_exec('find '.$logs_dir.' -type f -newermt "'.$from.'" \! -newermt "'.$to.'"');
-if (!is_null($created_files)) {
+if ($created_files !== null) {
     $hostname = shell_exec('hostname');
 
     // Send email
