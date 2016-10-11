@@ -8,6 +8,7 @@ use App\Response;
 use Helpers\Api;
 use Helpers\Cache;
 use Helpers\Log;
+use Helpers\Session;
 
 class Home extends \App\BaseController
 {
