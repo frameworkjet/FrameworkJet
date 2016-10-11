@@ -7,7 +7,6 @@
 namespace Helpers;
 
 use App\Config;
-use Helpers\Log;
 
 class Api
 {

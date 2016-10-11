@@ -12,7 +12,7 @@ class Config
 
     /**
      * @desc If config with corresponding file doesn't exist, it will return an empty array.
-     * @param sting $name
+     * @param string $name
      * @return array
      */
     public static function getByName($name)
