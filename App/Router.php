@@ -152,10 +152,19 @@ class Router
         if ($isMatched) {
             $requestResourceUrl = explode('/', $requestResourceUrl);
             $params = [];
+            $mapping = false;
 
             foreach ($requestResourceUrl as $key => $value) {
                 if ($value != $rawRouteResourceUrl[$key]) {
-                    $params[substr($rawRouteResourceUrl[$key], 1)] = $value;
+                    if ($rawRouteResourceUrl[$key] === null) {
+                        if (!$mapping) {
+                            $mapping = key($params);
+                        }
+
+                        $params[$mapping] .= '/'.$value;
+                    } else {
+                        $params[substr($rawRouteResourceUrl[$key], 1)] = $value;
+                    }
                 }
             }
 
