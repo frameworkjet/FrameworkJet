@@ -72,7 +72,6 @@ class App
      */
     const DEFAULT_RESPONSE_FORMAT = 'html';
     const DEFAULT_TIMEZONE = 'UTC';
-    const DEFAULT_LANGUAGE = 'en_UK';
 
     /********************************************************************************
      * Basic methods
@@ -190,11 +189,11 @@ class App
 
         try {
             // Check if template file exists
-            //if (!file_exists(self::getRootDir().'Templates/'.$matchedResource[0].$matchedResource[1].self::twigFileExt))  {
+            //if (!file_exists(self::getRootDir().'Templates/'.$matchedResource[0].'/'.$matchedResource[0].$matchedResource[1].self::twigFileExt))  {
             //    $response = false;
             //} else {
                 // Call the required controller's method which corresponds to the matched router.
-                Response::setTemplate($matchedResource[0].$matchedResource[1].self::twigFileExt);
+                Response::setTemplate($matchedResource[0].'/'.$matchedResource[0].$matchedResource[1].self::twigFileExt);
                 $response = self::executeResourceAction($matchedResource[0], $matchedResource[1], Router::getMatchedRouteParameters());
             //}
 
