@@ -505,7 +505,7 @@ Also for each Twig template we can access the variable:
 whose purpose is to tell us uf the user is logged. It can take one of the two values - TRUE or FALSE.
 
 ## Cliend-side
-### User session
+### Variables
 On the client-side you can access the cookie “is_logged” which has the only purpose to tell us if the user is logged. It can take one of the two values - TRUE or FALSE.	
 	
 # Contributing
