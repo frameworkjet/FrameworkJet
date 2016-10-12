@@ -4,9 +4,15 @@ use App\Router AS Router;
 
 return [
     'globalPattern' => [
-        ':id' => '\d+'
+        ':id' => '\d+',
+        ':mapping' => '[A-Za-z0-9\-\_\/]+',
+        ':path' => '[A-Za-z0-9\-\_]+'
     ],
     'routes' => [
+        /*=============== Mapper ===============*/
+        // API mapper
+        'mapper/:mapping' => [Router::ALL, 'mapper\Request'],
+
         /*=============== ... ===============*/
         /*------ ... ------*/
         '' => [Router::GET, 'home\Home'],

@@ -8,7 +8,6 @@ namespace Helpers;
 
 use App\App;
 use App\Config;
-use Helpers\Log;
 
 class Mailer
 {

@@ -6,8 +6,10 @@ var App = {
         listener: null
     },
     ajaxCalls: 0,
-    currentLang: 'en_UK',
+    currentLang: null,
+    currentLangCode: 0,
     defaultLang: 'en_UK',
+    defaultLangCode: 1,
     pageConfig: {} // this will contain different config depends on the page where we  are!
 };
 
@@ -21,7 +23,8 @@ $(function() {
         main: 'http://www.frameworkjet.com',
         api: 'http://api.frameworkjet.com'
     });
-    App.currentLang = $('#lang-switcher').length ? $('#lang-switcher').val() : App.defaultLang;
+    App.currentLang = dataManager.getCookie('lang') ? dataManager.getCookie('lang') : App.defaultLang;
+    App.currentLangCode = dataManager.getCookie('lang_code') ? dataManager.getCookie('lang_code') : App.defaultLangCode;
 
     // Links
     $("a.pg-link").on('click', function(e){

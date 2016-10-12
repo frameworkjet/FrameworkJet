@@ -72,7 +72,6 @@ class App
      */
     const DEFAULT_RESPONSE_FORMAT = 'html';
     const DEFAULT_TIMEZONE = 'UTC';
-    const DEFAULT_LANGUAGE = 'en_UK';
 
     /********************************************************************************
      * Basic methods
@@ -186,17 +185,19 @@ class App
 
         // Default configurations
         date_default_timezone_set(self::config('DEFAULT_TIMEZONE'));
-        Response::setLang(Request::getLang());
+        if (Response::getLang() != Request::getLang()) {
+            Response::setLang(Request::getLang());
+        }
 
         try {
             // Check if template file exists
-            if (!file_exists(self::getRootDir().'Templates/'.$matchedResource[0].$matchedResource[1].self::twigFileExt))  {
-                $response = false;
-            } else {
+            //if (!file_exists(self::getRootDir().'Templates/'.$matchedResource[0].'/'.$matchedResource[0].$matchedResource[1].self::twigFileExt))  {
+            //    $response = false;
+            //} else {
                 // Call the required controller's method which corresponds to the matched router.
-                Response::setTemplate($matchedResource[0].$matchedResource[1].self::twigFileExt);
+                Response::setTemplate($matchedResource[0].'/'.$matchedResource[0].$matchedResource[1].self::twigFileExt);
                 $response = self::executeResourceAction($matchedResource[0], $matchedResource[1], Router::getMatchedRouteParameters());
-            }
+            //}
 
             // Set the response.
             if ($response === false) {

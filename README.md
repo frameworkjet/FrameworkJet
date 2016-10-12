@@ -3,10 +3,10 @@
 
 FrameworkJet is a web application framework created to cover the following requirements:
 - **Low response time**.
-- The framework must be **as light as possible**, without additional heavy libraries and dependencies. It's up to you to add external libraries and helpers depending on your particular needs.
-- The framework must support **server-side rendering** of the content if we request it.
-- The framework must support **client-side rendering** of the content via a communication with an API.
-- The framework must support **multilingual** templating.
+- To work **as light as possible**, without additional heavy libraries and dependencies. It's up to you to add external libraries and helpers depending on your particular needs.
+- **Server-side rendering** of the content.
+- **Client-side rendering** of the content via communication with an API.
+- **Multilingual** templating.
 
 **Table of Contents**
 - [Used technologies](#used-technologies)
@@ -32,11 +32,15 @@ FrameworkJet is a web application framework created to cover the following requi
   - [Development](#development)
   - [Server-side](#server-side)
   	- [Routing, Controllers and Templating](#routing-controllers-and-templating)
+	- [Mapping](#mapping)
+	- [User session](#user-session)
+  - [Client-side](#client-side) 
+	- [Variables](#variables)
 - [Contributing](#contributing)
 - [License](#license)
 	
 # Used technologies
-For the covering of the above-mentioned requirements the following technologies and libraries have been used:
+The following technologies and libraries have been used:
 
 **Front-end:**
 - JavaScript:
@@ -46,17 +50,17 @@ For the covering of the above-mentioned requirements the following technologies 
 	- HTML5
 	- CSS3
 	- LESS or SASS
-	- Handlebars (Url: [http://handlebarsjs.com/](http://handlebarsjs.com/))
+	- Handlebarsjs
 
 **Back-end:**
 - Core:
 	- PHP core based on APIJet framework (Url: [https://github.com/APIJet/APIJet/tree/master](https://github.com/APIJet/APIJet/tree/master))
-	- Memcached (Url: [http://php.net/manual/en/book.memcached.php](http://php.net/manual/en/book.memcached.php))
-	- Monolog (Url: [https://github.com/Seldaek/monolog](https://github.com/Seldaek/monolog))
-	- PHPMailer (Url: [https://github.com/PHPMailer/PHPMailer](https://github.com/PHPMailer/PHPMailer))
+	- Memcached
+	- Monolog
+	- PHPMailer
 - Templates:
 	- HTML5
-	- Twig *(php template engine)* (Url: [http://twig.sensiolabs.org/](http://twig.sensiolabs.org/))
+	- Twig *(php template engine)*
 	- Translations
 
 **Server-side services:**
@@ -77,14 +81,14 @@ The framework has a few system requirements. You will need to make sure your ser
 - PDO PHP Extension
 
 # Installation
-To install the framework, follow the steps below. During the installation we will use commands used in Unix based system, but for the sake of the detailed explanation, we have given a few example for Windows based systems.
+To install the framework, follow the steps below. During the installation we will use commands used in Unix based system, but for the sake of the detailed explanation, we have given a few examples for Windows based systems.
 
 ## Checkout
-The first step is to checkout the project on your machine. In our case this most probably means to use the following command *(you will need Git)*:
+Checkout the project on your machine:
 ```
 git clone https://github.com/pavel-tashev/FrameworkJet.git
 ```
-For the current example the name of the directory where we will clone and install the project is “example”.
+For the current example, the name of the directory where we will clone and install the project is “example”.
 
 Go to the directory of the project:
 ```
@@ -128,7 +132,6 @@ rm -R node_modules/
 ```
 
 ## Configuration
-After the installation of the framework, you should finish the configures of the files listed below.
 
 ### Back-end application
 
@@ -153,10 +156,8 @@ return [
 ```
 Save and close.
 
-These two settings are required by the back-end application.
-
 #### Third-party services
-Go to Config/Services.php and set up the following lines:
+Go to Config/Services.php and set up the following:
 ```php
 ...
 return [
@@ -173,13 +174,13 @@ Save and close.
 The mail section is dedicated for the mail server which you may need to send emails. The api section is dedicated for the URL address and the output data format used to make calls to an external RESTful API.
 
 #### Cache
-Go to Config/Cache.php. This file contains the credentials required by the framework in order to connect to the Memcached server. The memcached server is used to cache data.
+Go to Config/Cache.php. This file contains the credentials required by the framework in order to connect to the Memcached server.
 
 #### Database
 Go to Config/SqlDatabase.php. This file contains the credentials required by the framework in order to connect to the SQL server.
 
 ### Front-end application
-Go to public/js/app.js and set up the following lines:
+Go to public/js/app.js and set up the following:
 ```js
 ...
 dataManager.config({
@@ -199,10 +200,8 @@ dataManager.config({
 ```
 Save and close.
 
-These two settings are required by the front-end javascript application to execute AJAX calls.
-
 ## File permissions
-Once the framework is cloned and configured, we will have to set up the access rights to the framework directory because the web service *(apache, nginx or else)* must have access. For Ubuntu this would look like this:
+Execute the following:
 ```
 chmod -R 0755 example/
 chown -R www-data example/
@@ -212,7 +211,7 @@ chgrp -R www-data example/
 ## Web service
 
 ### Nginx
-If you use Nginx, look at the configuration below. This configuration is for those cases when you use SSL certificate for the encryption of the traffic. Please take into account the root of your project, the domain names and the SSL certificates inside the configuration. You will have to change them for you application.
+If you use Nginx and SSL certificate for the encryption of the traffic, use the configuration below *(correct it according to your needs)*.
 ```
 server {
 	listen 80;
@@ -258,7 +257,7 @@ server {
 	}
 }
 ```
-Look at the configuration below if you don’t use SSL certificate for the encryption of the traffic. Please take into account the root of your project and the domain names inside the configuration. You will have to change them for you application.
+If you use Nginx and DON'T use SSL certificate for the encryption of the traffic, use the configuration below *(correct it according to your needs)*.
 ```
 server {
 	listen 80;
@@ -283,10 +282,10 @@ server {
 	}
 }
 ```
-Check if the configuration is correct and restart the service. For Ubuntu this would look like this:
+Check the validity of the configuration and reload:
 ```
 nginx -t
-service nginx restart
+service nginx reload
 ```
 
 ### Apache
@@ -311,9 +310,9 @@ For Ubuntu you can check this short tutorial: [https://www.digitalocean.com/comm
 ## Additional configurations (optional)
 
 ### CRON tasks
-In the root directory of the framework you will find a folder named “Tasks“. The purpose of this folder is to contain php files which can be requested by CRON tasks on regular basis. For example, the file “SystemCheckForLogs.php” *(which most probably will be in the directory)* checks if there are error logs generated during the last 36 hours and if there are, it sends an email to the system administrator with a detail report. You can also write your own logic *(to add different notification methods)*.
+In the root directory of the framework you will find a folder named “Tasks“. The purpose of this folder is to contain php files which can be requested by CRON tasks on regular basis. For example, the file “SystemCheckForLogs.php” checks if there are error logs generated during the last 36 hours and if there are, it sends an email to the system administrator with a detail report. You can also write your own logic.
 
-For Ubuntu, if you want to set up a CRON task for that specific file, go to the terminal and type:
+For Ubuntu, if you want to set up a CRON task for that specific file:
 ```
 crontab -e
 ```
@@ -327,7 +326,7 @@ This will call the above-mentioned file on every 24 hours and it will generate r
 
 # Structure of the framework and development
 
-More detail document will be provided in the future. At the moment for better understanding of the work of the framework, you will have to review the code and also to take into account the structure described below.
+More detail document will be provided in the future.
 
 ## File structure
 Before we start with the development of our own application, we will need to know the purpose of each file and folder part of the framework.
@@ -350,7 +349,9 @@ Config/ - this folder contains all configuration required by the framework
 
 Controller/ - here are all controllers called by the routers
 
-Helpers/ - here are stored classes written by us, which execute specific tasks (db connection, communication with the cache server, error logging, sending of emails, etc.)
+Helpers/ - here are stored classes written by us, which execute specific tasks (db connection, communication with the cache server, error logging, sending of emails, curl requests, user sessions, etc.)
+
+images/ - every time when we use the API mapper and we have transfer of images, we will store the images inside this directory before we pass them to the API
 
 logs/ - here are stored all error logs
 
@@ -452,7 +453,7 @@ If you run this task in the terminal, grunt will start a script which will watch
 
 ## Server-side
 ### Routing, Controllers and Templating
-The names of the controllers and the Twig templates must be chosen according to the routes defined inside */Config/Router.php*. For example, if we define the route:
+The names of the controllers and the Twig templates must be chosen according to the routes defined inside */Config/Router.php*. For example, if we have a route:
 ```
 'example-first-page' => [Router::GET, 'example\FirstPage'],
 ```
@@ -468,14 +469,45 @@ With the following method *(the HTTP Request with lowercase letters and the word
 ```
 getFirstPage()
 ```
-In the folder */Templates* we must create the following template *(the word “example” and the word “FirstPage”)*:
+In the folder */Templates* we must create the following sub-folder *(if it still not created)* and template *(the word “example” and the word “FirstPage”)*:
 ```
-exampleFirstPage.html.twig
+example/exampleFirstPage.html.twig
 ```
 When we request *URL/example-first-page*, the framework will check for the controllers, methods and templates with these names. If any of them is not defined, it will return an error.
 
 In the folder with Twig templates we can define other templates and macroses which can be included in any of the other templates according to the Twig rules.
 
+### Mapping
+In the routes configuration you can add the following example pattern:
+```
+':mapping' => '[A-Za-z0-9\-\_\/]+',
+```
+and example route:
+```
+'mapper/:mapping' => [Router::ALL, 'mapper\Request'],
+```
+This type of routing can be used to map requests sent to an external API. For example, if we send the following request to the framework:
+```
+URL/mapper/v1/content/countries/json
+```
+This request will be forwarded to controller “Mapper”, method “Request” and we can write our own logic which sends it to the following example API URL:
+```
+API-URL/v1/content/countries/json
+```
+
+### User session
+The user session is managed by the helper Session which takes into account oAuth2 protocol.
+
+Also for each Twig template we can access the variable:
+```
+{{ is_logged }}
+```
+whose purpose is to tell us uf the user is logged. It can take one of the two values - TRUE or FALSE.
+
+## Cliend-side
+### User session
+On the client-side you can access the cookie “is_logged” which has the only purpose to tell us if the user is logged. It can take one of the two values - TRUE or FALSE.	
+	
 # Contributing
 How can you contribute:
 

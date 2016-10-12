@@ -10,6 +10,7 @@ class Response
     private static $template = '';
     private static $params = [];
     private static $body = '';
+    private static $cookie_expire = 31536000000; // 1000 years
 
 
 
@@ -98,7 +99,14 @@ class Response
      */
     public static function setLang($lang)
     {
+        // Set language
         $_SESSION['lang'] = $lang;
+        setcookie('lang', $lang, self::$cookie_expire);
+
+        // Set language code
+        $lang_code = App::config('ALLOWED_LANGUAGES_CODES')[$lang];
+        $_SESSION['lang_code'] = $lang_code;
+        setcookie('lang_code', $lang_code, self::$cookie_expire);
     }
 
     /**
@@ -120,6 +128,24 @@ class Response
     }
 
     /**
+     * @desc Check if the response format is JSON.
+     * @return bool if it is JSON
+     */
+    public static function isFormatJson()
+    {
+        return self::getFormat() == 'json';
+    }
+
+    /**
+     * @desc Check if the response format is CSV.
+     * @return bool if it is CSV
+     */
+    public static function isFormatCsv()
+    {
+        return self::getFormat() == 'csv';
+    }
+
+    /**
      * @desc Render the response of the App framework.
      */
     public static function render()
@@ -135,8 +161,17 @@ class Response
     private static function sendHeaders()
     {
         http_response_code(self::getCode());
+
         if (self::getFormat() == 'html') {
             header('Content-type: text/html');
+        } else if (self::getFormat() == 'json') {
+            header('Content-type: application/'.self::getFormat());
+        } else if (self::isFormatCsv()){
+            header("Content-type: text/csv");
+            header("Content-Disposition: attachment; filename=export.csv");
+            header("Cache-Control: no-cache, no-store, must-revalidate");
+            header("Pragma: no-cache");
+            header("Expires: 0");
         }
     }
 
@@ -146,18 +181,29 @@ class Response
      */
     private static function sendBody()
     {
-        if (self::getCode() != '200') {
-            self::setTemplate('error'.self::getCode().App::twigFileExt);
+        // First check if we have a non-standard request
+        if (self::isFormatJson()) {
+            echo json_encode(self::$params);
+        } else if (self::isFormatCsv()) {
+            $output = fopen("php://output", "w");
+            foreach (self::$params as $row) {
+                fputcsv($output, $row);
+            }
+            fclose($output);
+        } else {
+            if (self::getCode() != '200') {
+                self::setTemplate('error'.self::getCode().App::twigFileExt);
+            }
+
+            // Wrap the response in a template dedicated for errors
+            $loader = new \Twig_Loader_Filesystem(App::getRootDir().'Templates/');
+            $twig = new \Twig_Environment($loader, array('cache' => App::getRootDir() . '/cache',));
+            self::setBody($twig->render(
+                self::getTemplate(),
+                array_merge(self::getParams(), ['trans' => Config::getByName('Translations/'.self::getLang()), 'lang' => self::getLang()])
+            ));
+
+            echo self::$body;
         }
-
-        // Wrap the response in a template dedicated for errors
-        $loader = new \Twig_Loader_Filesystem(App::getRootDir().'Templates/');
-        $twig = new \Twig_Environment($loader, array('cache' => App::getRootDir() . '/cache',));
-        self::setBody($twig->render(
-            self::getTemplate(),
-            array_merge(self::getParams(), ['trans' => Config::getByName('Translations/'.self::getLang()), 'lang' => self::getLang()])
-        ));
-
-        echo self::$body;
     }
 }
