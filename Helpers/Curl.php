@@ -15,12 +15,13 @@ class Curl
      * @param array $params
      * @param array $header
      * @param string|bool $format
+     * @param bool $with_file
      * @return array
      */
-    public static function request($method, $request_url, $params = [], $header = [], $format = false)
+    public static function request($method, $request_url, $params = [], $header = [], $format = false, $with_file = false)
     {
         // Set header according to the format
-        if ($format != 'file') {
+        if (!$with_file) {
             switch ($format) {
                 case 'json':
                     $header[] = 'Content-Type: application/json';
@@ -62,7 +63,13 @@ class Curl
         // Close Curl
         curl_close($ch);
 
+        // Prepare the response
+        $body = substr($response, $response_info['header_size']);
+        if ($format == 'json') {
+            $body = json_decode($body, true);
+        }
+
         // Return data
-        return ['http_code' => $response_info['http_code'], 'body' => substr($response, $response_info['header_size'])];
+        return ['http_code' => $response_info['http_code'], 'body' => $body];
     }
 }
