@@ -185,7 +185,9 @@ class App
 
         // Default configurations
         date_default_timezone_set(self::config('DEFAULT_TIMEZONE'));
-        Response::setLang(Request::getLang());
+        if (Response::getLang() != Request::getLang()) {
+            Response::setLang(Request::getLang());
+        }
 
         try {
             // Check if template file exists

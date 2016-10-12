@@ -10,10 +10,6 @@ class Request
     const DELETE = 'DELETE';
 
     private static $inputData = null;
-    private static $langsAllowed = [
-        'en_UK',
-        'es_ES'
-    ];
     private static $httpRequestsAllowed = [
         'GET',
         'POST',
@@ -87,7 +83,7 @@ class Request
      */
     public static function getLang()
     {
-        return isset($_GET['lang']) && in_array($_GET['lang'], self::$langsAllowed) ? $_GET['lang'] : (is_null($_SESSION['lang']) ? App::config('DEFAULT_LANGUAGE') : $_SESSION['lang']);
+        return (isset($_GET['lang']) && in_array($_GET['lang'], App::config('ALLOWED_LANGUAGES'))) ? $_GET['lang'] : ($_SESSION['lang'] === null ? App::config('DEFAULT_LANGUAGE') : $_SESSION['lang']);
     }
 
     /**
@@ -110,7 +106,11 @@ class Request
             $rawInput = file_get_contents('php://input');
 
             if (!empty($rawInput)) {
-                mb_parse_str($rawInput, $inputData);
+                if(Response::getFormat() == 'json') {
+                    $inputData = json_decode($rawInput, true);
+                } else {
+                    mb_parse_str($rawInput, $inputData);
+                }
             }
 
             self::$inputData = $inputData;
