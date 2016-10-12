@@ -2,11 +2,12 @@
 
 namespace Controller;
 
+use App\Config;
 use App\App;
 use App\Request;
 use App\Response;
-use Helpers\Api;
 use Helpers\Cache;
+use Helpers\Curl;
 use Helpers\Log;
 use Helpers\Session;
 
@@ -34,7 +35,9 @@ class Home extends \App\BaseController
         // ...
 
         // Return data
-        return ['description' => 'This is the home page.'];
+        $data = ['description' => 'This is the home page.'];
+
+        return array_merge($data, ['is_logged' => Session::isLogged()]);
     }
 
     /*

@@ -16,6 +16,15 @@ class Session
     private function __clone() {}
 
     /**
+     * @desc Check if the user is logged or no
+     * @return bool
+     */
+    public static function isLogged()
+    {
+        return (isset($_SESSION['access_token']) && $_SESSION['access_token'] !== false) ? true : false;
+    }
+
+    /**
      * @desc Get access token.
      * @return bool|string
      */

@@ -32,6 +32,10 @@ FrameworkJet is a web application framework created to cover the following requi
   - [Development](#development)
   - [Server-side](#server-side)
   	- [Routing, Controllers and Templating](#routing-controllers-and-templating)
+	- [Mapping](#mapping)
+	- [User session](#user-session)
+  - [Client-side](#client-side) 
+	- [Variables](#variables)
 - [Contributing](#contributing)
 - [License](#license)
 	
@@ -345,7 +349,9 @@ Config/ - this folder contains all configuration required by the framework
 
 Controller/ - here are all controllers called by the routers
 
-Helpers/ - here are stored classes written by us, which execute specific tasks (db connection, communication with the cache server, error logging, sending of emails, etc.)
+Helpers/ - here are stored classes written by us, which execute specific tasks (db connection, communication with the cache server, error logging, sending of emails, curl requests, user sessions, etc.)
+
+images/ - every time when we use the API mapper and we have transfer of images, we will store the images inside this directory before we pass them to the API
 
 logs/ - here are stored all error logs
 
@@ -471,6 +477,37 @@ When we request *URL/example-first-page*, the framework will check for the contr
 
 In the folder with Twig templates we can define other templates and macroses which can be included in any of the other templates according to the Twig rules.
 
+### Mapping
+In the routes configuration you can add the following example pattern:
+```
+':mapping' => '[A-Za-z0-9\-\_\/]+',
+```
+and example route:
+```
+'mapper/:mapping' => [Router::ALL, 'mapper\Request'],
+```
+This type of routing can be used to map requests sent to an external API. For example, if we send the following request to the framework:
+```
+URL/mapper/v1/content/countries/json
+```
+This request will be forwarded to controller “Mapper”, method “Request” and we can write our own logic which sends it to the following example API URL:
+```
+API-URL/v1/content/countries/json
+```
+
+### User session
+The user session is managed by the helper Session which takes into account oAuth2 protocol.
+
+Also for each Twig template we can access the variable:
+```
+{{ is_logged }}
+```
+whose purpose is to tell us uf the user is logged. It can take one of the two values - TRUE or FALSE.
+
+## Cliend-side
+### User session
+On the client-side you can access the cookie “is_logged” which has the only purpose to tell us if the user is logged. It can take one of the two values - TRUE or FALSE.	
+	
 # Contributing
 How can you contribute:
 
