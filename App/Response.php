@@ -10,7 +10,7 @@ class Response
     private static $template = '';
     private static $params = [];
     private static $body = '';
-    private static $cookie_expire = 1000*365*24*3600;
+    private static $cookie_expire = 31536000000; // 1000 years
 
 
 

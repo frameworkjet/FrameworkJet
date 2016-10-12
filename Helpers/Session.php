@@ -8,6 +8,10 @@ namespace Helpers;
 
 class Session
 {
+    private static $cookie_expire = 31536000000; // 1000 years
+
+
+
     private function __construct() {}
     private function __clone() {}
 
@@ -18,7 +22,7 @@ class Session
     public static function getAccessToken()
     {
         if (!isset($_COOKIE['is_logged'])) {
-            $_COOKIE['is_logged'] = false;
+            setcookie('is_logged', false, self::$cookie_expire);
         }
 
         if (!isset($_SESSION['access_token'])) {
@@ -69,7 +73,7 @@ class Session
         $_SESSION['refresh_token'] = $refresh_token;
         $_SESSION['expires_on'] = $expires_on;
 
-        $_COOKIE['is_logged'] = true;
+        setcookie('is_logged', true, self::$cookie_expire);
     }
 
     /**
@@ -78,6 +82,6 @@ class Session
     public static function delete()
     {
         $_SESSION['access_token'] = $_SESSION['token_type'] = $_SESSION['refresh_token'] = $_SESSION['expires_on'] = false;
-        $_COOKIE['is_logged'] = false;
+        setcookie('is_logged', false, self::$cookie_expire);
     }
 }
