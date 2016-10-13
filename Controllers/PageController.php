@@ -37,7 +37,7 @@ class Page extends \App\BaseController
         // Return data
         $data = ['description' => 'This is the contact page.'];
 
-        return array_merge($data, ['is_logged' => Session::isLogged()]);
+        return Model::prepareData($data);
     }
 
     /*

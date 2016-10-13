@@ -37,7 +37,7 @@ class Home extends \App\BaseController
         // Return data
         $data = ['description' => 'This is the home page.'];
 
-        return array_merge($data, ['is_logged' => Session::isLogged()]);
+        return Model::prepareData($data);
     }
 
     /*

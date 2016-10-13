@@ -36,8 +36,8 @@ class Explore extends \App\BaseController
 
         // Return data
         $data = ['description' => 'This is the explore page.'];
-
-        return array_merge($data, ['is_logged' => Session::isLogged()]);
+        
+        return Model::prepareData($data);
     }
 
     /**
@@ -55,7 +55,7 @@ class Explore extends \App\BaseController
         // Return data
         $data = ['description' => 'This is the explore page. The id is: '.$id];
 
-        return array_merge($data, ['is_logged' => Session::isLogged()]);
+        return Model::prepareData($data);
     }
 
     /*
