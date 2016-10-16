@@ -24,4 +24,24 @@ abstract class BaseController
     {
         return Request::getInputData();
     }
+
+    /**
+     * @desc Generate an random key.
+     * @param integer $length
+     * @return string
+     */
+    public function generateRandomKey($length = 50)
+    {
+        return bin2hex(openssl_random_pseudo_bytes($length/2));
+    }
+
+    /**
+     * @desc Check the if the variables is or contains integer.
+     * @param mixed $var
+     * @return boolean
+     */
+    protected function isInteger($var)
+    {
+        return filter_var($var, FILTER_VALIDATE_INT) !== false;
+    }
 }

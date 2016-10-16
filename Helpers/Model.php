@@ -18,7 +18,7 @@ class Model
      * @param array $data
      * @return array
      */
-    public static function prepareData($data)
+    public static function prepareData($data = [])
     {
         return array_merge($data, self::getData());
     }
@@ -30,6 +30,7 @@ class Model
     public static function getData()
     {
         return [
+            'trans' => Config::getByName('Translations/'.Response::getLang()),
             'is_logged' => Session::isLogged()
         ];
     }

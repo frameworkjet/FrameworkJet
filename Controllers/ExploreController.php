@@ -35,9 +35,9 @@ class Explore extends \App\BaseController
         // ...
 
         // Return data
-        $data = ['description' => 'This is the explore page.'];
+        $output = ['description' => 'This is the explore page.'];
         
-        return Model::prepareData($data);
+        return Model::prepareData($output);
     }
 
     /**
@@ -53,9 +53,9 @@ class Explore extends \App\BaseController
         // ...
 
         // Return data
-        $data = ['description' => 'This is the explore page. The id is: '.$id];
+        $output = ['description' => 'This is the explore page. The id is: '.$id];
 
-        return Model::prepareData($data);
+        return Model::prepareData($output);
     }
 
     /*

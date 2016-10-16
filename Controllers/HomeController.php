@@ -35,9 +35,9 @@ class Home extends \App\BaseController
         // ...
 
         // Return data
-        $data = ['description' => 'This is the home page.'];
+        $output = ['description' => 'This is the home page.'];
 
-        return Model::prepareData($data);
+        return Model::prepareData($output);
     }
 
     /*

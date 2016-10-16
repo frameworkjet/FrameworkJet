@@ -35,9 +35,9 @@ class Page extends \App\BaseController
         // ...
 
         // Return data
-        $data = ['description' => 'This is the contact page.'];
+        $output = ['description' => 'This is the contact page.'];
 
-        return Model::prepareData($data);
+        return Model::prepareData($output);
     }
 
     /*

@@ -119,6 +119,15 @@ class Response
     }
 
     /**
+     * @desc Get the lang code
+     * @return mixed
+     */
+    public static function getLangCode()
+    {
+        return $_SESSION['lang_code'];
+    }
+
+    /**
      * @desc Set the body of the response.
      * @param mixed $body
      */
@@ -200,7 +209,7 @@ class Response
             $twig = new \Twig_Environment($loader, array('cache' => App::getRootDir() . '/cache',));
             self::setBody($twig->render(
                 self::getTemplate(),
-                array_merge(self::getParams(), ['trans' => Config::getByName('Translations/'.self::getLang()), 'lang' => self::getLang()])
+                array_merge(self::getParams(), ['lang' => self::getLang(), 'lang_code' => self::getLangCode()])
             ));
 
             echo self::$body;
