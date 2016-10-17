@@ -49,15 +49,20 @@ module.exports = function(grunt) {
                 }
             }
         },
-	sass: {
-		dist: {
-			files: {
-				'./public/css/style.css': './public/css/style.scss'
-			}
-		}
-	},
+        sass: {
+            dist: {
+                files: {
+                    './public/css/style.css': './public/css/style.scss'
+                }
+            }
+        },
         clean: {
-            contents: ['./cache/*']
+            cache: {
+                src: ['./cache/*']
+            },
+            logs: {
+                src: ['./logs/*']
+            }
         },
         watch: {
             scripts: {
@@ -80,7 +85,7 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['handlebars', 'uglify', 'less', 'clean']);
+    grunt.registerTask('default', ['handlebars', 'uglify', 'less', 'clean:cache']);
 
     grunt.loadNpmTasks('grunt-contrib-handlebars');
     grunt.loadNpmTasks('grunt-contrib-uglify');

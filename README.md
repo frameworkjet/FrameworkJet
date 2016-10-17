@@ -437,9 +437,19 @@ grunt handlebars
 Takes all handlebar templates located in *"/public/templates"* and pre-compiles them. The pre-compiled templates are saved in */public/js/templates.js*.
 
 ```
-grunt clean
+grunt clean:cache
 ```
 Cleans the content of folder *“cache/”*.
+
+```
+grunt clean:logs
+```
+Cleans the content of folder *“logs/”*.
+
+```
+grunt clean
+```
+Cleans the content of folders *“cache/”* and *“logs/”*.
 
 ```
 grunt
