@@ -1,7 +1,7 @@
 $(function() {
-    // Contact us - button
-    App.controller.pageContactUsButtonTest = function()
+    // Contact us page
+    App.controller.pageContactUs = function()
     {
-        console.log('Button clicked! (Contact us page)');
+        console.log('BContact us page');
     };
 });

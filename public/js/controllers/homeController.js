@@ -1,7 +1,7 @@
 $(function() {
-    // Home - button
-    App.controller.homeButtonTest = function()
+    // Home page
+    App.controller.homeHome = function()
     {
-        console.log('Button clicked! (Home page)');
+        console.log('Home page');
     };
 });

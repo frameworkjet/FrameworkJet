@@ -2,5 +2,13 @@
 
 {% block content %}
     {{ description }}
-    <button class="pg-action" data="home-button-test">{{ trans.button.clickme }}</button>
+    <button class="pg-action" data="home">{{ trans.button.clickme }}</button>
+{% endblock %}
+
+{% block js_additional %}
+	<script type="text/javascript">
+        $(function() {
+		    App.controller.homeHome();
+        });
+	</script>
 {% endblock %}
