@@ -83,7 +83,7 @@ class Request
      */
     public static function getLang()
     {
-        return (isset($_GET['lang']) && in_array($_GET['lang'], App::config('ALLOWED_LANGUAGES'))) ? $_GET['lang'] : ($_SESSION['lang'] === null ? App::config('DEFAULT_LANGUAGE') : $_SESSION['lang']);
+        return (isset($_GET['lang']) && in_array($_GET['lang'], App::config('ALLOWED_LANGUAGES'))) ? $_GET['lang'] : (isset($_SESSION['lang']) ? $_SESSION['lang'] : App::config('DEFAULT_LANGUAGE'));
     }
 
     /**
@@ -92,7 +92,7 @@ class Request
      */
     public static function getHttpRequestsAllowed()
     {
-        return self::$httpRequestsAllowed;
+       return self::$httpRequestsAllowed;
     }
 
     /**
@@ -118,7 +118,7 @@ class Request
 
         return self::$inputData;
     }
-    
+
     /**
      * @desc Get all headers
      * @return array

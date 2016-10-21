@@ -94,6 +94,15 @@ class Response
     }
 
     /**
+     * @desc Check if the language is set
+     * @return bool
+     */
+    public static function isLangSet()
+    {
+        return  (isset($_SESSION['lang']) && isset($_SESSION['lang_code']));
+    }
+
+    /**
      * @desc Set the lang
      * @param string $lang
      */

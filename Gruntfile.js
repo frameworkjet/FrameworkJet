@@ -25,10 +25,13 @@ module.exports = function(grunt) {
             js: {
                 files: {
                     './public/js/lib.min.js': [
-                        './public/js/lib/*.js',
+                        './public/js/lib/*.js'
+                    ],
+                    './public/js/custom.min.js': [
                         './public/js/controllers/*.js',
-                        './public/js/routes.js',
                         './public/js/templates.js',
+                        './public/js/config.js',
+                        './public/js/routes.js',
                         './public/js/app.js',
                         './public/js/translations/*.js'
                     ]
@@ -39,10 +42,6 @@ module.exports = function(grunt) {
             production: {
                 options: {
                     paths: ['./public/css']
-                    /*plugins: [
-                        new (require('less-plugin-autoprefix'))({browsers: ["last 2 versions"]}),
-                        new (require('less-plugin-clean-css'))(cleanCssOptions)
-                    ]*/
                 },
                 files: {
                     './public/css/style.css': './public/css/style.less'
@@ -71,14 +70,16 @@ module.exports = function(grunt) {
 
                     './public/js/lib/*.js',
                     './public/js/controllers/*.js',
-                    './public/js/routes.js',
                     './public/js/templates.js',
+                    './public/js/config.js',
+                    './public/js/routes.js',
                     './public/js/app.js',
                     './public/js/translations/*.js',
 
                     './public/css/style.less',
 
-                    './Templates/*'
+                    './Templates/*',
+                    './Templates/*/*'
                 ],
                 tasks: ['default']
             }

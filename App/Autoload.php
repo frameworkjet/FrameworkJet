@@ -183,9 +183,9 @@ class App
             return;
         }
 
-        // Default configurations
+        // Default configurations - timezone, language, etc.
         date_default_timezone_set(self::config('DEFAULT_TIMEZONE'));
-        if (Response::getLang() != Request::getLang()) {
+        if (!Response::isLangSet() || Request::getLang() != Response::getLang()) {
             Response::setLang(Request::getLang());
         }
 

@@ -2,14 +2,12 @@
 var App = {
     controller: {},
     config: {
-        interval: 10000,
+        interval: config['app']['interval'],
         listener: null
     },
     ajaxCalls: 0,
-    currentLang: null,
-    currentLangCode: 0,
-    defaultLang: 'en_UK',
-    defaultLangCode: 1,
+    lang: null,
+    langCode: 0,
     pageConfig: {} // this will contain different config depends on the page where we  are!
 };
 
@@ -20,11 +18,11 @@ $(function() {
         mode: 'history'
     });
     dataManager.config({
-        main: 'http://www.frameworkjet.com',
-        api: 'http://api.frameworkjet.com'
+        main: config['data_manager']['main'],
+        api: config['data_manager']['api']
     });
-    App.currentLang = dataManager.getCookie('lang') ? dataManager.getCookie('lang') : App.defaultLang;
-    App.currentLangCode = dataManager.getCookie('lang_code') ? dataManager.getCookie('lang_code') : App.defaultLangCode;
+    App.lang = dataManager.getCookie('lang') ? dataManager.getCookie('lang') : config['app']['default_lang'];
+    App.langCode = dataManager.getCookie('lang_code') ? dataManager.getCookie('lang_code') : config['app']['default_lang_code'];
 
     // Links
     $("a.pg-link").on('click', function(e){
@@ -61,7 +59,9 @@ $(function() {
 
     // Periodical listener
     var fn = function() {
-        console.log('Checked!');
+        if (dataManager.getCookie('is_logged') === true) {
+            console.log('User logged!');
+        }
     };
     clearInterval(App.config.listener);
     App.config.listener = setInterval(fn, App.config.interval);
