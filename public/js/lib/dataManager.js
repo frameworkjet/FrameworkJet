@@ -1,4 +1,5 @@
 var dataManager = {
+    ajaxCalls: 0,
     contentInstance: null,
     urlPrefix: '',
     options: {},
@@ -22,7 +23,7 @@ var dataManager = {
     },
     startAjaxCall: function() {
         // Inform the application that an ajax request has been started
-        App.ajaxCalls++;
+        this.ajaxCalls++;
 
         // Block action
         if (this.contentInstance != null) {
@@ -34,7 +35,7 @@ var dataManager = {
     },
     endAjaxCall: function() {
         // Inform the application that the ajax request has been completed
-        App.ajaxCalls--;
+        this.ajaxCalls--;
 
         // Unblock action
         if (this.contentInstance != null) {
@@ -45,14 +46,14 @@ var dataManager = {
         //this.urlPrefix = '';
         //this.header = {};
     },
-    ajax: function(url, method, onSuccessCallback, onFailureCallback, contentInstance) {
+    ajax: function(url, method, input_data, onSuccessCallback, onFailureCallback, contentInstance) {
         if (typeof onSuccessCallback == 'undefined') {
             onSuccessCallback = function(){};
         }
 
         if (typeof onFailureCallback == 'undefined') {
             onFailureCallback = function(){
-                console.log('Error! The ajax call was unsuccessful.');
+                //console.log('Error! The ajax call was unsuccessful.');
             };
         }
 
@@ -66,7 +67,9 @@ var dataManager = {
         $.ajax({
             url: that.urlPrefix + url,
             type: method,
-            headers: that.header
+            headers: that.header,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(input_data)
         }).done(function(data, statusText, xhr) {
             onSuccessCallback(data, xhr.status);
             that.endAjaxCall();

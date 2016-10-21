@@ -1,11 +1,7 @@
 // Set the App object
 var App = {
     controller: {},
-    config: {
-        interval: config['app']['interval'],
-        listener: null
-    },
-    ajaxCalls: 0,
+    listener: null,
     lang: null,
     langCode: 0,
     pageConfig: {} // this will contain different config depends on the page where we  are!
@@ -63,6 +59,6 @@ $(function() {
             console.log('User logged!');
         }
     };
-    clearInterval(App.config.listener);
-    App.config.listener = setInterval(fn, App.config.interval);
+    clearInterval(App.listener);
+    App.listener = setInterval(fn, config['app']['interval']);
 });
