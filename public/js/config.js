@@ -6,6 +6,7 @@ var config = {
     },
     "data_manager": {
         "main": "http://www.frameworkjet.com",
-        "api": "http://api.frameworkjet.com/mapper"
+        "mapper": "http://www.frameworkjet.com/mapper",
+        "api": "http://api.frameworkjet.com"
     }
 }

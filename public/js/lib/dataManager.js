@@ -64,13 +64,19 @@ var dataManager = {
         that = this;
         that.startAjaxCall();
 
-        $.ajax({
+        // Prepare the request
+        var request_package = {
             url: that.urlPrefix + url,
             type: method,
             headers: that.header,
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(input_data)
-        }).done(function(data, statusText, xhr) {
+            contentType: "application/json; charset=utf-8"
+        }
+        if(method != 'GET') {
+            request_package['data'] = JSON.stringify(input_data);
+        }
+
+        // Send request
+        $.ajax(request_package).done(function(data, statusText, xhr) {
             onSuccessCallback(data, xhr.status);
             that.endAjaxCall();
         }).fail(function(data, statusText, xhr){

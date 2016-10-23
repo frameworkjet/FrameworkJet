@@ -15,6 +15,7 @@ $(function() {
     });
     dataManager.config({
         main: config['data_manager']['main'],
+        mapper: config['data_manager']['mapper'],
         api: config['data_manager']['api']
     });
     App.lang = dataManager.getCookie('lang') ? dataManager.getCookie('lang') : config['app']['default_lang'];
