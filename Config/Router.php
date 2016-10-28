@@ -6,7 +6,7 @@ return [
     'globalPattern' => [
         ':id' => '\d+',
         ':mapping' => '[A-Za-z0-9\-\_\/]+',
-        ':path' => '[A-Za-z0-9\-\_]+'
+        ':path' => '[A-Za-z0-9\-\_\.]+'
     ],
     'routes' => [
         /*=============== Mapper ===============*/

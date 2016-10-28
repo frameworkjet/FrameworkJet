@@ -10,7 +10,7 @@ class Response
     private static $template = '';
     private static $params = [];
     private static $body = '';
-    private static $cookie_expire = 31536000000; // 1000 years
+    private static $cookie_expire = 3153600000; // 100 years
 
 
 
@@ -110,12 +110,12 @@ class Response
     {
         // Set language
         $_SESSION['lang'] = $lang;
-        setcookie('lang', $lang, self::$cookie_expire);
+        setcookie('lang', $lang, time() + self::$cookie_expire);
 
         // Set language code
         $lang_code = App::config('ALLOWED_LANGUAGES_CODES')[$lang];
         $_SESSION['lang_code'] = $lang_code;
-        setcookie('lang_code', $lang_code, self::$cookie_expire);
+        setcookie('lang_code', $lang_code, time() + self::$cookie_expire);
     }
 
     /**

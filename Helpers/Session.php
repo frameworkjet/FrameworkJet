@@ -8,7 +8,7 @@ namespace Helpers;
 
 class Session
 {
-    private static $cookie_expire = 31536000000; // 1000 years
+    private static $cookie_expire = 3153600000; // 100 years
 
 
 
@@ -21,7 +21,14 @@ class Session
      */
     public static function isLogged()
     {
-        return (isset($_SESSION['access_token']) && $_SESSION['access_token'] !== false) ? true : false;
+        if (isset($_SESSION['access_token']) && $_SESSION['access_token'] !== false) {
+            setcookie('is_logged', 1, time() + self::$cookie_expire);
+            return true;
+        }
+
+        self::delete();
+
+        return false;
     }
 
     /**
@@ -30,12 +37,8 @@ class Session
      */
     public static function getAccessToken()
     {
-        if (!isset($_COOKIE['is_logged'])) {
-            setcookie('is_logged', false, self::$cookie_expire);
-        }
-
         if (!isset($_SESSION['access_token'])) {
-            $_SESSION['access_token'] = $_SESSION['token_type'] = $_SESSION['refresh_token'] = $_SESSION['expires_on'] = false;
+            self::delete();
         }
 
         return $_SESSION['access_token'];
@@ -82,7 +85,7 @@ class Session
         $_SESSION['refresh_token'] = $refresh_token;
         $_SESSION['expires_on'] = $expires_on;
 
-        setcookie('is_logged', true, self::$cookie_expire);
+        setcookie('is_logged', 1, time() + self::$cookie_expire);
     }
 
     /**
@@ -91,6 +94,6 @@ class Session
     public static function delete()
     {
         $_SESSION['access_token'] = $_SESSION['token_type'] = $_SESSION['refresh_token'] = $_SESSION['expires_on'] = false;
-        setcookie('is_logged', false, self::$cookie_expire);
+        setcookie('is_logged', 0, time() + self::$cookie_expire);
     }
 }

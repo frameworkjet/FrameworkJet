@@ -56,7 +56,7 @@ $(function() {
 
     // Periodical listener
     var fn = function() {
-        if (dataManager.getCookie('is_logged') === true) {
+        if (dataManager.getCookie('is_logged') == 1) {
             console.log('User logged!');
         }
     };
