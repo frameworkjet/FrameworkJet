@@ -24,6 +24,14 @@
         <option value="es_ES" {% if lang == "es_ES" %}selected="selected"{% endif %}>Español</option>
     </select>
     <div>&copy; {{ trans.copyright }} by FrameworkJet</div>
+	{%  block debugger %}
+		<pre>
+			Is logged?
+			{{ dump(is_logged) }}
+			Translations:
+			{{ dump(trans) }}
+		</pre>
+	{% endblock %}
 </div>
 
 

@@ -215,7 +215,8 @@ class Response
 
             // Wrap the response in a template dedicated for errors
             $loader = new \Twig_Loader_Filesystem(App::getRootDir().'Templates/');
-            $twig = new \Twig_Environment($loader, array('cache' => App::getRootDir() . '/cache',));
+            $twig = new \Twig_Environment($loader, array('debug' => true, 'cache' => App::getRootDir() . '/cache',));
+            $twig->addExtension(new \Twig_Extension_Debug());
             self::setBody($twig->render(
                 self::getTemplate(),
                 array_merge(self::getParams(), ['lang' => self::getLang(), 'lang_code' => self::getLangCode()])
