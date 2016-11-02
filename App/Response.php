@@ -214,9 +214,12 @@ class Response
             }
 
             // Wrap the response in a template dedicated for errors
+            $debug = Config::getByName('App')['DEBUG'];
             $loader = new \Twig_Loader_Filesystem(App::getRootDir().'Templates/');
-            $twig = new \Twig_Environment($loader, array('debug' => true, 'cache' => App::getRootDir() . '/cache',));
-            $twig->addExtension(new \Twig_Extension_Debug());
+            $twig = new \Twig_Environment($loader, array('debug' => $debug, 'cache' => App::getRootDir() . '/cache',));
+            if ($debug) {
+                $twig->addExtension(new \Twig_Extension_Debug());
+            }
             self::setBody($twig->render(
                 self::getTemplate(),
                 array_merge(self::getParams(), ['lang' => self::getLang(), 'lang_code' => self::getLangCode()])
