@@ -31,7 +31,8 @@ class Model
     {
         return [
             'trans' => Config::getByName('Translations/'.Response::getLang()),
-            'is_logged' => Session::isLogged()
+            'is_logged' => Session::isLogged(),
+            'debug' => Config::getByName('App')['DEBUG']
         ];
     }
 }
