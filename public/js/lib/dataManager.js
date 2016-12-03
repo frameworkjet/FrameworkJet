@@ -29,6 +29,7 @@ var dataManager = {
         if (this.contentInstance != null) {
             this.contentInstance.on('click', function(e) {
                 e.preventDefault();
+                e.stopImmediatePropagation();
             });
             // @todo to check is it possible to block hover action as well!
         }

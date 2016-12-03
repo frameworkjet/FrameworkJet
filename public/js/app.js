@@ -22,8 +22,9 @@ $(function() {
     App.langCode = dataManager.getCookie('lang_code') ? dataManager.getCookie('lang_code') : config['app']['default_lang_code'];
 
     // Links
-    $("a.pg-link").on('click', function(e){
+    $(document).on('click', '.pg-link', function(e){
         e.preventDefault();
+        e.stopImmediatePropagation();
 
         var href = $(this).attr('href');
 
@@ -34,10 +35,15 @@ $(function() {
 
         Router.navigate(href);
     });
+    $(document).on('click', '.pg-link-inactive', function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+    });
 
     // Buttons and links
-    $(".pg-action").on('click', function(e){
+    $(document).on('click', '.pg-action', function(e){
         e.preventDefault();
+        e.stopImmediatePropagation();
 
         // Call the corresponding controller
         var data = $(this).attr('data').split('-');
@@ -46,12 +52,12 @@ $(function() {
         for (i in data) {
             action += data[i].charAt(0).toUpperCase() + data[i].slice(1);
         }
-        App.controller[action]();
+        App.controller[action]($(this));
     });
 
     //Switch lang
     $("select.lang-switcher").on('change', function(e){
-        window.location = '/'+Router.getFragment()+'?lang='+this.value;
+        window.location.href = '/'+Router.getFragment()+'?lang='+this.value;
     });
 
     // Periodical listener
