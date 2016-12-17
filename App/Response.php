@@ -110,12 +110,12 @@ class Response
     {
         // Set language
         $_SESSION['lang'] = $lang;
-        setcookie('lang', $lang, time() + self::$cookie_expire);
+        setcookie('lang', $lang, time() + self::$cookie_expire, '/');
 
         // Set language code
         $lang_code = App::config('ALLOWED_LANGUAGES_CODES')[$lang];
         $_SESSION['lang_code'] = $lang_code;
-        setcookie('lang_code', $lang_code, time() + self::$cookie_expire);
+        setcookie('lang_code', $lang_code, time() + self::$cookie_expire, '/'); //
     }
 
     /**
