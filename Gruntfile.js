@@ -5,7 +5,11 @@ module.exports = function(grunt) {
         handlebars: {
             compile: {
                 files: {
-                    "./public/js/templates.js": "./public/templates/*.handlebars"
+                    // "./public/js/templates.js": "./public/templates/*.handlebars",
+                    "./public/js/templates.js": [
+                        "./public/templates/*.handlebars",
+                        "./public/templates/*/*.handlebars"
+                    ]
                 },
                 options: {
                     amd: false,
@@ -67,6 +71,7 @@ module.exports = function(grunt) {
             scripts: {
                 files: [
                     './public/templates/*.handlebars',
+                    "./public/templates/*/*.handlebars",
 
                     './public/js/lib/*.js',
                     './public/js/controllers/*.js',

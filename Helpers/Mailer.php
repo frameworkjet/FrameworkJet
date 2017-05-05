@@ -36,6 +36,7 @@ class Mailer
             self::$instance->Password = $config['password']; // SMTP password
             self::$instance->SMTPSecure = $config['smtp_secure']; // Enable TLS encryption, `ssl` also accepted
             self::$instance->Port = $config['port']; // TCP port to connect to
+            self::$instance->CharSet = 'UTF-8';
             self::$instance->setFrom($config['username'], $config['from']);
         }
 

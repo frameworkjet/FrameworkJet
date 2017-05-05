@@ -6,6 +6,8 @@
 
 namespace Helpers;
 
+use App\Config;
+
 class Session
 {
     private static $expires_in = 3153600000; // 100 years
@@ -48,7 +50,7 @@ class Session
             self::delete();
         }
 
-        return $_SESSION['user_access_data']['access_token'];
+        return $_SESSION['user_access_data']['access_token'] ?? false;
     }
 
     /**
@@ -57,7 +59,7 @@ class Session
      */
     public static function getTokenType()
     {
-        return $_SESSION['user_access_data']['token_type'];
+        return $_SESSION['user_access_data']['token_type'] ?? false;
     }
 
     /**
@@ -66,7 +68,7 @@ class Session
      */
     public static function getRefreshToken()
     {
-        return $_SESSION['user_access_data']['refresh_token'];
+        return $_SESSION['user_access_data']['refresh_token'] ?? false;
     }
 
     /**
@@ -75,7 +77,7 @@ class Session
      */
     public static function getExpiresOn()
     {
-        return $_SESSION['user_access_data']['expires_on'];
+        return $_SESSION['user_access_data']['expires_on'] ?? false;
     }
 
     /**
@@ -84,7 +86,7 @@ class Session
      */
     public static function getUserId()
     {
-        return $_SESSION['user_access_data']['user_id'];
+        return $_SESSION['user_access_data']['user_id'] ?? false;
     }
 
     /**
@@ -93,7 +95,11 @@ class Session
      */
     public static function getHeader()
     {
-        return 'Authorization: '.Session::getTokenType().' '.Session::getAccessToken();
+        if (Session::getTokenType() && Session::getAccessToken()) {
+            return 'Authorization: '.Session::getTokenType().' '.Session::getAccessToken();
+        }
+
+        return;
     }
 
     /**
@@ -113,8 +119,8 @@ class Session
         $expires_on_unix = $expires_on_unix ? $expires_on_unix : strtotime($expires_on);
 
         // Set cookies
-        setcookie('is_logged', 1, $expires_on_unix, '/');
-        setcookie('access_code', $access_code, $expires_on_unix, '/');
+        setcookie('is_logged', 1, $expires_on_unix, '/', Config::getByName('App')['DEFAULT_DOMAIN']);
+        setcookie('access_code', $access_code, $expires_on_unix, '/', Config::getByName('App')['DEFAULT_DOMAIN']);
 
         // Set all data to a SESSION variable
         $_SESSION['user_access_data'] = [
@@ -139,10 +145,12 @@ class Session
     public static function delete()
     {
         $_SESSION['user_access_data'] = false;
-        Cache::delete('user_access_data_'.$_COOKIE['access_code']);
+        if (isset($_COOKIE['access_code'])) {
+            Cache::delete('user_access_data_'.$_COOKIE['access_code']);
+        }
 
-        setcookie('is_logged', 0, time() + self::$expires_in, '/');
-        setcookie('access_code', '', time() - 3600, '/');
+        setcookie('is_logged', 0, time() + self::$expires_in, '/', Config::getByName('App')['DEFAULT_DOMAIN']);
+        setcookie('access_code', '', time() - 3600, '/', Config::getByName('App')['DEFAULT_DOMAIN']);
     }
 
     /**

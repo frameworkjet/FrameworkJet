@@ -47,7 +47,7 @@ class Request
      */
     public static function getHeader($key)
     {
-        return self::getallheaders()[$key];
+        return self::getallheaders()[$key] ?? '';
     }
 
     /**

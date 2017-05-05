@@ -78,7 +78,7 @@ The following technologies and libraries have been used:
 
 # Server requirements
 The framework has a few system requirements.
-- PHP >= 5.6.4
+- PHP >= 7.0
 - PHP cURL Extension
 - PDO PHP Extension
 

@@ -56,7 +56,7 @@ class Mysql
         // Check for errors and return response
         $error = $statement->errorCode();
         if ($error != '00000') {
-            Log::critical('mysql', $error);
+            Log::critical('mysql', $error.', Query: '.$query);
 
             //var_dump($query);
             //var_dump($error);

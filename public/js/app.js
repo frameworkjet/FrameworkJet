@@ -2,9 +2,31 @@
 var App = {
     controller: {},
     listener: null,
+    listener_interval: null,
     lang: null,
     langCode: 0,
-    pageConfig: {} // this will contain different config depends on the page where we  are!
+    pageConfig: {}, // this will contain different config depends on the page where we  are!
+
+    isTabFocused: function(){
+        var stateKey, eventKey, keys = {
+            hidden: "visibilitychange",
+            webkitHidden: "webkitvisibilitychange",
+            mozHidden: "mozvisibilitychange",
+            msHidden: "msvisibilitychange"
+        };
+
+        for (stateKey in keys) {
+            if (stateKey in document) {
+                eventKey = keys[stateKey];
+                break;
+            }
+        }
+
+        return function(c) {
+            if (c) document.addEventListener(eventKey, c);
+            return !document[stateKey];
+        }
+    }
 };
 
 // System configurations and global listeners
@@ -57,15 +79,33 @@ $(function() {
 
     //Switch lang
     $("select.lang-switcher").on('change', function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
         window.location.href = '/'+Router.getFragment()+'?lang='+this.value;
     });
 
     // Periodical listener
     var fn = function() {
-        if (dataManager.getCookie('is_logged') == 1) {
+        if (App.isTabFocused()) {
+            if (App.listener_interval != config['app']['interval']) {
+                App.listener_interval = config['app']['interval'];
+                clearInterval(App.listener);
+                App.listener = setInterval(fn, App.listener_interval);
+            }
+        } else {
+            if (App.listener_interval != config['app']['interval_not_focused']) {
+                App.listener_interval = config['app']['interval_not_focused'];
+                clearInterval(App.listener);
+                App.listener = setInterval(fn, App.listener_interval);
+            }
+        }
+
+        if (dataManager.getCookie('is_logged') == 1 && App.isTabFocused()) {
             console.log('User logged!');
         }
     };
     clearInterval(App.listener);
-    App.listener = setInterval(fn, config['app']['interval']);
+    App.listener_interval = config['app']['interval'];
+    App.listener = setInterval(fn, App.listener_interval);
 });
