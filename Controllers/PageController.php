@@ -9,6 +9,9 @@ use App\Response;
 use Helpers\Cache;
 use Helpers\Curl;
 use Helpers\Log;
+use Helpers\Mailer;
+use Helpers\Model;
+use Helpers\Mysql;
 use Helpers\Session;
 
 class Page extends \App\BaseController
@@ -35,9 +38,9 @@ class Page extends \App\BaseController
         // ...
 
         // Return data
-        $data = ['description' => 'This is the contact page.'];
+        $output = ['description' => 'This is the contact page.'];
 
-        return array_merge($data, ['is_logged' => Session::isLogged()]);
+        return Model::prepareData($output);
     }
 
     /*

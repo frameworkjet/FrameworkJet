@@ -1,8 +1,11 @@
 Router
     .add('explore\/(.*)', function(){
-        App.controller.exploreWithId(arguments);
+        App.controller.exploreExploreId(arguments);
     })
     .add('explore', function(){
-        App.controller.explore();
+        App.controller.exploreExplore();
+    })
+    .add('contact-us', function(){
+        App.controller.pageContactUs();
     })
     .check().listen();

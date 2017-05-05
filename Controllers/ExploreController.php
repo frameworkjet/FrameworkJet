@@ -9,6 +9,9 @@ use App\Response;
 use Helpers\Cache;
 use Helpers\Curl;
 use Helpers\Log;
+use Helpers\Mailer;
+use Helpers\Model;
+use Helpers\Mysql;
 use Helpers\Session;
 
 class Explore extends \App\BaseController
@@ -35,9 +38,9 @@ class Explore extends \App\BaseController
         // ...
 
         // Return data
-        $data = ['description' => 'This is the explore page.'];
-
-        return array_merge($data, ['is_logged' => Session::isLogged()]);
+        $output = ['description' => 'This is the explore page.'];
+        
+        return Model::prepareData($output);
     }
 
     /**
@@ -53,9 +56,9 @@ class Explore extends \App\BaseController
         // ...
 
         // Return data
-        $data = ['description' => 'This is the explore page. The id is: '.$id];
+        $output = ['description' => 'This is the explore page. The id is: '.$id];
 
-        return array_merge($data, ['is_logged' => Session::isLogged()]);
+        return Model::prepareData($output);
     }
 
     /*

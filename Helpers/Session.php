@@ -6,9 +6,11 @@
 
 namespace Helpers;
 
+use App\Config;
+
 class Session
 {
-    private static $cookie_expire = 31536000000; // 1000 years
+    private static $expires_in = 3153600000; // 100 years
 
 
 
@@ -21,7 +23,21 @@ class Session
      */
     public static function isLogged()
     {
-        return (isset($_SESSION['access_token']) && $_SESSION['access_token'] !== false) ? true : false;
+        if (isset($_SESSION['user_access_data']['access_token'])) {
+            if (!isset($_COOKIE['is_logged']) || !isset($_COOKIE['access_code'])) {
+                self::setByArray($_SESSION['user_access_data']);
+            }
+
+            return true;
+        } elseif (isset($_COOKIE['access_code']) && ($user_access_data = Cache::get('user_access_data_'.$_COOKIE['access_code'])) !== false) {
+            self::setByArray($user_access_data);
+
+            return true;
+        }
+
+        self::delete();
+
+        return false;
     }
 
     /**
@@ -30,15 +46,11 @@ class Session
      */
     public static function getAccessToken()
     {
-        if (!isset($_COOKIE['is_logged'])) {
-            setcookie('is_logged', false, self::$cookie_expire);
+        if (self::isLogged() === false) {
+            self::delete();
         }
 
-        if (!isset($_SESSION['access_token'])) {
-            $_SESSION['access_token'] = $_SESSION['token_type'] = $_SESSION['refresh_token'] = $_SESSION['expires_on'] = false;
-        }
-
-        return $_SESSION['access_token'];
+        return $_SESSION['user_access_data']['access_token'] ?? false;
     }
 
     /**
@@ -47,7 +59,7 @@ class Session
      */
     public static function getTokenType()
     {
-        return $_SESSION['token_type'];
+        return $_SESSION['user_access_data']['token_type'] ?? false;
     }
 
     /**
@@ -56,7 +68,7 @@ class Session
      */
     public static function getRefreshToken()
     {
-        return $_SESSION['refresh_token'];
+        return $_SESSION['user_access_data']['refresh_token'] ?? false;
     }
 
     /**
@@ -65,7 +77,29 @@ class Session
      */
     public static function getExpiresOn()
     {
-        return $_SESSION['expires_on'];
+        return $_SESSION['user_access_data']['expires_on'] ?? false;
+    }
+
+    /**
+     * @desc Get the user id
+     * @return integer
+     */
+    public static function getUserId()
+    {
+        return $_SESSION['user_access_data']['user_id'] ?? false;
+    }
+
+    /**
+     * @desc Returns the header used to authenticate the user
+     * @return string
+     */
+    public static function getHeader()
+    {
+        if (Session::getTokenType() && Session::getAccessToken()) {
+            return 'Authorization: '.Session::getTokenType().' '.Session::getAccessToken();
+        }
+
+        return;
     }
 
     /**
@@ -74,15 +108,35 @@ class Session
      * @param string $token_type
      * @param string $refresh_token
      * @param string $expires_on
+     * @param integer $user_id
+     * @param bool|string  $access_code
+     * @param bool|integer $expires_on_unix
      */
-    public static function set($access_token, $token_type, $refresh_token, $expires_on)
+    public static function set($access_token, $token_type, $refresh_token, $expires_on, $user_id = false, $access_code = false, $expires_on_unix = false)
     {
-        $_SESSION['access_token'] = $access_token;
-        $_SESSION['token_type'] = ucfirst($token_type);
-        $_SESSION['refresh_token'] = $refresh_token;
-        $_SESSION['expires_on'] = $expires_on;
+        // Generate variables
+        $access_code = $access_code ? $access_code : self::generateRandomKey();
+        $expires_on_unix = $expires_on_unix ? $expires_on_unix : strtotime($expires_on);
 
-        setcookie('is_logged', true, self::$cookie_expire);
+        // Set cookies
+        setcookie('is_logged', 1, $expires_on_unix, '/', Config::getByName('App')['DEFAULT_DOMAIN']);
+        setcookie('access_code', $access_code, $expires_on_unix, '/', Config::getByName('App')['DEFAULT_DOMAIN']);
+
+        // Set all data to a SESSION variable
+        $_SESSION['user_access_data'] = [
+            'access_code' => $access_code,
+            'access_token' => $access_token,
+            'token_type' => ucfirst($token_type),
+            'refresh_token' => $refresh_token,
+            'expires_on' => $expires_on,
+            'expires_on_unix' => $expires_on_unix,
+            'user_id' => $user_id
+        ];
+
+        // Save in the cache
+        $expiration = $expires_on_unix - time();
+        $expiration = $expiration > 2592000 ? 2592000 : $expiration; // 2592000 seconds = 30 days
+        Cache::set('user_access_data_'.$access_code, $_SESSION['user_access_data'], $expiration);
     }
 
     /**
@@ -90,7 +144,39 @@ class Session
      */
     public static function delete()
     {
-        $_SESSION['access_token'] = $_SESSION['token_type'] = $_SESSION['refresh_token'] = $_SESSION['expires_on'] = false;
-        setcookie('is_logged', false, self::$cookie_expire);
+        $_SESSION['user_access_data'] = false;
+        if (isset($_COOKIE['access_code'])) {
+            Cache::delete('user_access_data_'.$_COOKIE['access_code']);
+        }
+
+        setcookie('is_logged', 0, time() + self::$expires_in, '/', Config::getByName('App')['DEFAULT_DOMAIN']);
+        setcookie('access_code', '', time() - 3600, '/', Config::getByName('App')['DEFAULT_DOMAIN']);
+    }
+
+    /**
+     * @desc Set the user session by array
+     * @param array $user_access_data
+     */
+    private static function setByArray($user_access_data)
+    {
+        self::set(
+            $user_access_data['access_token'],
+            $user_access_data['token_type'],
+            $user_access_data['refresh_token'],
+            $user_access_data['expires_on'],
+            $user_access_data['user_id'],
+            $user_access_data['access_code'],
+            $user_access_data['expires_on_unix']
+        );
+    }
+
+    /**
+     * @desc Generate an random key.
+     * @param integer $length
+     * @return string
+     */
+    private function generateRandomKey($length = 50)
+    {
+        return bin2hex(openssl_random_pseudo_bytes($length/2));
     }
 }

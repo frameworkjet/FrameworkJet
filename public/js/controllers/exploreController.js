@@ -1,6 +1,6 @@
 $(function() {
-    // Explore
-    App.controller.explore = function()
+    // Explore page
+    App.controller.exploreExplore = function()
     {
         console.log('Explore controller');
 
@@ -18,18 +18,12 @@ $(function() {
         });
     };
 
-    // Explore with id
-    App.controller.exploreWithId = function(arguments)
+    // Explore page with id
+    App.controller.exploreExploreId = function(arguments)
     {
         console.log('Explore controller with id');
 
         // Example usage of arguments
         //console.log(arguments);
-    };
-
-    // Explore button
-    App.controller.exploreButtonTest = function()
-    {
-        console.log('Button clicked! (Explore page)');
     };
 });

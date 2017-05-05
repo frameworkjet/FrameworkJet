@@ -10,7 +10,7 @@ class Response
     private static $template = '';
     private static $params = [];
     private static $body = '';
-    private static $cookie_expire = 31536000000; // 1000 years
+    private static $cookie_expire = 3153600000; // 100 years
 
 
 
@@ -94,6 +94,15 @@ class Response
     }
 
     /**
+     * @desc Check if the language is set
+     * @return bool
+     */
+    public static function isLangSet()
+    {
+        return  (isset($_SESSION['lang']) && isset($_SESSION['lang_code']));
+    }
+
+    /**
      * @desc Set the lang
      * @param string $lang
      */
@@ -101,12 +110,12 @@ class Response
     {
         // Set language
         $_SESSION['lang'] = $lang;
-        setcookie('lang', $lang, self::$cookie_expire);
+        setcookie('lang', $lang, time() + self::$cookie_expire, '/', Config::getByName('App')['DEFAULT_DOMAIN']);
 
         // Set language code
         $lang_code = App::config('ALLOWED_LANGUAGES_CODES')[$lang];
         $_SESSION['lang_code'] = $lang_code;
-        setcookie('lang_code', $lang_code, self::$cookie_expire);
+        setcookie('lang_code', $lang_code, time() + self::$cookie_expire, '/', Config::getByName('App')['DEFAULT_DOMAIN']);
     }
 
     /**
@@ -115,7 +124,16 @@ class Response
      */
     public static function getLang()
     {
-        return $_SESSION['lang'];
+        return $_SESSION['lang'] ?? false;
+    }
+
+    /**
+     * @desc Get the lang code
+     * @return mixed
+     */
+    public static function getLangCode()
+    {
+        return $_SESSION['lang_code'] ?? false;
     }
 
     /**
@@ -196,11 +214,15 @@ class Response
             }
 
             // Wrap the response in a template dedicated for errors
+            $debug = Config::getByName('App')['DEBUG'];
             $loader = new \Twig_Loader_Filesystem(App::getRootDir().'Templates/');
-            $twig = new \Twig_Environment($loader, array('cache' => App::getRootDir() . '/cache',));
+            $twig = new \Twig_Environment($loader, array('debug' => $debug, 'cache' => App::getRootDir() . '/cache',));
+            if ($debug) {
+                $twig->addExtension(new \Twig_Extension_Debug());
+            }
             self::setBody($twig->render(
                 self::getTemplate(),
-                array_merge(self::getParams(), ['trans' => Config::getByName('Translations/'.self::getLang()), 'lang' => self::getLang()])
+                array_merge(self::getParams(), ['lang' => self::getLang(), 'lang_code' => self::getLangCode()])
             ));
 
             echo self::$body;

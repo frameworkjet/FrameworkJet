@@ -155,8 +155,8 @@ class Router
             $mapping = false;
 
             foreach ($requestResourceUrl as $key => $value) {
-                if ($value != $rawRouteResourceUrl[$key]) {
-                    if ($rawRouteResourceUrl[$key] === null) {
+                if (!isset($rawRouteResourceUrl[$key]) || isset($rawRouteResourceUrl[$key]) && $value != $rawRouteResourceUrl[$key]) {
+                    if (!isset($rawRouteResourceUrl[$key])) {
                         if (!$mapping) {
                             $mapping = key($params);
                         }

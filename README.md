@@ -21,6 +21,7 @@ FrameworkJet is a web application framework created to cover the following requi
 		- [Cache](#cache)
 		- [Database](#database)
 	- [Front-end application](#front-end-application)
+  - [Gitignore](#gitignore)
   - [File permissions](#file-permissions)
   - [Web service](#web-service)
 	- [Nginx](#nginx)
@@ -34,6 +35,7 @@ FrameworkJet is a web application framework created to cover the following requi
   	- [Routing, Controllers and Templating](#routing-controllers-and-templating)
 	- [Mapping](#mapping)
 	- [User session](#user-session)
+	- [Twig templates](#twig-templates)
   - [Client-side](#client-side) 
 	- [Variables](#variables)
 - [Contributing](#contributing)
@@ -75,8 +77,8 @@ The following technologies and libraries have been used:
 - npm task "watch" used to watch for changes in particular directories and files and if there are changes, it will automatically call the default grunt task which will call all other tasks (handlebars, uglify, less, sass, clean)*.
 
 # Server requirements
-The framework has a few system requirements. You will need to make sure your server meets them:
-- PHP >= 5.6.4
+The framework has a few system requirements.
+- PHP >= 7.0
 - PHP cURL Extension
 - PDO PHP Extension
 
@@ -165,7 +167,19 @@ return [
 		<SETTINGS-USED-TO-SEND-EMAILS>
 	],
 	'api' => [
-		<SETTINGS-USED-TO-CONNECT-TO-THE-API>
+		'url' => 'API-URL',
+		...
+	]
+];
+```
+Example:
+```php
+...
+return [
+	...
+	'api' => [
+		'url' => 'https://dev-api.framework.com',
+		...
 	]
 ];
 ```
@@ -174,31 +188,39 @@ Save and close.
 The mail section is dedicated for the mail server which you may need to send emails. The api section is dedicated for the URL address and the output data format used to make calls to an external RESTful API.
 
 #### Cache
-Go to Config/Cache.php. This file contains the credentials required by the framework in order to connect to the Memcached server.
+Go to Config/Cache.php. This file contains the credentials required by the framework to connect to the Memcached server.
 
 #### Database
-Go to Config/SqlDatabase.php. This file contains the credentials required by the framework in order to connect to the SQL server.
+Go to Config/SqlDatabase.php. This file contains the credentials required by the framework to connect to the SQL server.
 
 ### Front-end application
 Go to public/js/app.js and set up the following:
 ```js
 ...
-dataManager.config({
-	main: 'URL-OF-THE-PUBLIC-WEBSITE',
-	api: 'URL-OF-THE-API'
-});
+	"data_manager": {
+        "main": "URL-OF-THE-PUBLIC-WEBSITE",
+        "api": "URL-OF-THE-API"
+	},
 ...
 ```
 Example:
 ```js
 ...
-dataManager.config({
-	main: 'https://dev.framework.com',
-	api: 'https://dev-api.framework.com'
-});
+	"data_manager": {
+        "main": "https://dev.framework.com",
+        "api": "https://dev-api.framework.com"
+	},
 ...
 ```
 Save and close.
+
+## Gitignore
+When we finish with your configurations, you can add the config files to .gitignore which will protect them to be rewritten. Add this to .gitignore:
+```js
+	/Config/App.php
+	/Config/Services.php
+	/public/js/config.js
+```
 
 ## File permissions
 Execute the following:
@@ -257,7 +279,7 @@ server {
 	}
 }
 ```
-If you use Nginx and DON'T use SSL certificate for the encryption of the traffic, use the configuration below *(correct it according to your needs)*.
+If you use Nginx and you DON'T use SSL certificate for the encryption of the traffic, use the configuration below *(correct it according to your needs)*.
 ```
 server {
 	listen 80;
@@ -289,17 +311,15 @@ service nginx reload
 ```
 
 ### Apache
-If you want to run the application on Apache you will have to make sure to enable “mod_rewrite” module. For Windows, go to the directory of the Apache installation and open the folder “conf”. Open the file *httpd.conf* and find the line:
+If you want to run the application on Apache you will have to make sure to enable “mod_rewrite” module. For Windows, go to the directory of the Apache installation and open the folder “conf”. Open the file *httpd.conf* and find and uncomment the line:
 ```
 #LoadModule rewrite_module modules/mod_rewrite.so
 ```
-and uncomment it.
-
 Find all occurrences of:
 ```
 AllowOverride None
 ```
-And change them to:
+and change them to:
 ```
 AllowOverride All
 ```
@@ -322,7 +342,7 @@ Add the following line:
 ```
 Save and close.
 
-This will call the above-mentioned file on every 24 hours and it will generate reports for the system administrator, if there any error logs inside folder “logs”.
+This will call the above-mentioned file on every 24 hours.
 
 # Structure of the framework and development
 
@@ -332,6 +352,8 @@ More detail document will be provided in the future.
 Before we start with the development of our own application, we will need to know the purpose of each file and folder part of the framework.
 ```
 App/ - this is the core of the framework you don’t have to change anything here
+
+cache/ - this folder contains cached files generated by Twig template engine
 
 Config/ - this folder contains all configuration required by the framework
 
@@ -381,6 +403,10 @@ public/ - public directory
 		
 		app.js - starting point of the javascript application
 		
+		config.js - configuration of the js application
+		
+		custom.min.js - this is minimized js file generated by grunt
+		
 		lib.min.js - this is minimized js file generated by grunt
 		
 		routes.js - routes required by the javascript application
@@ -400,6 +426,8 @@ Tasks/ - tasks requested by CRON tasks written by us
 Templates/ - Twig templates used by the back-end
 
 vendor/ - packages managed by composer
+
+.gitignore - ignore file for git
 
 composer.json - a list of packages required by the framework
 
@@ -437,9 +465,19 @@ grunt handlebars
 Takes all handlebar templates located in *"/public/templates"* and pre-compiles them. The pre-compiled templates are saved in */public/js/templates.js*.
 
 ```
-grunt clean
+grunt clean:cache
 ```
 Cleans the content of folder *“cache/”*.
+
+```
+grunt clean:logs
+```
+Cleans the content of folder *“logs/”*.
+
+```
+grunt clean
+```
+Cleans the content of folders *“cache/”* and *“logs/”*.
 
 ```
 grunt
@@ -498,11 +536,15 @@ API-URL/v1/content/countries/json
 ### User session
 The user session is managed by the helper Session which takes into account oAuth2 protocol.
 
-Also for each Twig template we can access the variable:
-```
-{{ is_logged }}
-```
-whose purpose is to tell us uf the user is logged. It can take one of the two values - TRUE or FALSE.
+### Twig templates
+Within each Twig template by default we have access to the following variables:
+- {{ is_logged }} - its purpose is to tell us if the user is logged. It can take one of the two values - TRUE or FALSE.
+- {{ trans.SOME_KEY }} - this is an array containing a list of translations which will be used for templating
+
+Sometimes when we submit forms, we will have access to the following variables:
+- {{ is_done }} - if this variable is TRUE, this means that the form has been submitted successfully and we can display a message for success
+- {{ error_message }} - is is_done is not TRUE, we most probably will have this one which will contain an error message
+- {{ form_data }} - every time when we submit a form and after the submission we go back to the same page, we will have access to a list of variables and their values which have been submitted
 
 ## Cliend-side
 ### Variables

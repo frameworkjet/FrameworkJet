@@ -5,7 +5,11 @@ module.exports = function(grunt) {
         handlebars: {
             compile: {
                 files: {
-                    "./public/js/templates.js": "./public/templates/*.handlebars"
+                    // "./public/js/templates.js": "./public/templates/*.handlebars",
+                    "./public/js/templates.js": [
+                        "./public/templates/*.handlebars",
+                        "./public/templates/*/*.handlebars"
+                    ]
                 },
                 options: {
                     amd: false,
@@ -25,10 +29,13 @@ module.exports = function(grunt) {
             js: {
                 files: {
                     './public/js/lib.min.js': [
-                        './public/js/lib/*.js',
+                        './public/js/lib/*.js'
+                    ],
+                    './public/js/custom.min.js': [
                         './public/js/controllers/*.js',
-                        './public/js/routes.js',
                         './public/js/templates.js',
+                        './public/js/config.js',
+                        './public/js/routes.js',
                         './public/js/app.js',
                         './public/js/translations/*.js'
                     ]
@@ -39,48 +46,52 @@ module.exports = function(grunt) {
             production: {
                 options: {
                     paths: ['./public/css']
-                    /*plugins: [
-                        new (require('less-plugin-autoprefix'))({browsers: ["last 2 versions"]}),
-                        new (require('less-plugin-clean-css'))(cleanCssOptions)
-                    ]*/
                 },
                 files: {
                     './public/css/style.css': './public/css/style.less'
                 }
             }
         },
-	sass: {
-		dist: {
-			files: {
-				'./public/css/style.css': './public/css/style.scss'
-			}
-		}
-	},
+        sass: {
+            dist: {
+                files: {
+                    './public/css/style.css': './public/css/style.scss'
+                }
+            }
+        },
         clean: {
-            contents: ['./cache/*']
+            cache: {
+                src: ['./cache/*']
+            },
+            logs: {
+                src: ['./logs/*']
+            }
         },
         watch: {
             scripts: {
                 files: [
                     './public/templates/*.handlebars',
+                    "./public/templates/*/*.handlebars",
 
                     './public/js/lib/*.js',
                     './public/js/controllers/*.js',
-                    './public/js/routes.js',
                     './public/js/templates.js',
+                    './public/js/config.js',
+                    './public/js/routes.js',
                     './public/js/app.js',
                     './public/js/translations/*.js',
 
                     './public/css/style.less',
 
-                    './Templates/*'
+                    './Templates/*',
+                    './Templates/*/*'
                 ],
                 tasks: ['default']
             }
         }
     });
 
-    grunt.registerTask('default', ['handlebars', 'uglify', 'less', 'clean']);
+    grunt.registerTask('default', ['handlebars', 'uglify', 'less', 'clean:cache']);
 
     grunt.loadNpmTasks('grunt-contrib-handlebars');
     grunt.loadNpmTasks('grunt-contrib-uglify');

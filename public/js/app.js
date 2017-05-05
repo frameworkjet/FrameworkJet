@@ -1,16 +1,32 @@
 // Set the App object
 var App = {
     controller: {},
-    config: {
-        interval: 10000,
-        listener: null
-    },
-    ajaxCalls: 0,
-    currentLang: null,
-    currentLangCode: 0,
-    defaultLang: 'en_UK',
-    defaultLangCode: 1,
-    pageConfig: {} // this will contain different config depends on the page where we  are!
+    listener: null,
+    listener_interval: null,
+    lang: null,
+    langCode: 0,
+    pageConfig: {}, // this will contain different config depends on the page where we  are!
+
+    isTabFocused: function(){
+        var stateKey, eventKey, keys = {
+            hidden: "visibilitychange",
+            webkitHidden: "webkitvisibilitychange",
+            mozHidden: "mozvisibilitychange",
+            msHidden: "msvisibilitychange"
+        };
+
+        for (stateKey in keys) {
+            if (stateKey in document) {
+                eventKey = keys[stateKey];
+                break;
+            }
+        }
+
+        return function(c) {
+            if (c) document.addEventListener(eventKey, c);
+            return !document[stateKey];
+        }
+    }
 };
 
 // System configurations and global listeners
@@ -20,15 +36,17 @@ $(function() {
         mode: 'history'
     });
     dataManager.config({
-        main: 'http://www.frameworkjet.com',
-        api: 'http://api.frameworkjet.com'
+        main: config['data_manager']['main'],
+        mapper: config['data_manager']['mapper'],
+        api: config['data_manager']['api']
     });
-    App.currentLang = dataManager.getCookie('lang') ? dataManager.getCookie('lang') : App.defaultLang;
-    App.currentLangCode = dataManager.getCookie('lang_code') ? dataManager.getCookie('lang_code') : App.defaultLangCode;
+    App.lang = dataManager.getCookie('lang') ? dataManager.getCookie('lang') : config['app']['default_lang'];
+    App.langCode = dataManager.getCookie('lang_code') ? dataManager.getCookie('lang_code') : config['app']['default_lang_code'];
 
     // Links
-    $("a.pg-link").on('click', function(e){
+    $(document).on('click', '.pg-link', function(e){
         e.preventDefault();
+        e.stopImmediatePropagation();
 
         var href = $(this).attr('href');
 
@@ -39,10 +57,15 @@ $(function() {
 
         Router.navigate(href);
     });
+    $(document).on('click', '.pg-link-inactive', function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+    });
 
     // Buttons and links
-    $(".pg-action").on('click', function(e){
+    $(document).on('click', '.pg-action', function(e){
         e.preventDefault();
+        e.stopImmediatePropagation();
 
         // Call the corresponding controller
         var data = $(this).attr('data').split('-');
@@ -51,18 +74,38 @@ $(function() {
         for (i in data) {
             action += data[i].charAt(0).toUpperCase() + data[i].slice(1);
         }
-        App.controller[action]();
+        App.controller[action]($(this));
     });
 
     //Switch lang
     $("select.lang-switcher").on('change', function(e){
-        window.location = '/'+Router.getFragment()+'?lang='+this.value;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        window.location.href = '/'+Router.getFragment()+'?lang='+this.value;
     });
 
     // Periodical listener
     var fn = function() {
-        console.log('Checked!');
+        if (App.isTabFocused()) {
+            if (App.listener_interval != config['app']['interval']) {
+                App.listener_interval = config['app']['interval'];
+                clearInterval(App.listener);
+                App.listener = setInterval(fn, App.listener_interval);
+            }
+        } else {
+            if (App.listener_interval != config['app']['interval_not_focused']) {
+                App.listener_interval = config['app']['interval_not_focused'];
+                clearInterval(App.listener);
+                App.listener = setInterval(fn, App.listener_interval);
+            }
+        }
+
+        if (dataManager.getCookie('is_logged') == 1 && App.isTabFocused()) {
+            console.log('User logged!');
+        }
     };
-    clearInterval(App.config.listener);
-    App.config.listener = setInterval(fn, App.config.interval);
+    clearInterval(App.listener);
+    App.listener_interval = config['app']['interval'];
+    App.listener = setInterval(fn, App.listener_interval);
 });
