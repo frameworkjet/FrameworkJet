@@ -9,6 +9,9 @@ use App\Response;
 use Helpers\Cache;
 use Helpers\Curl;
 use Helpers\Log;
+use Helpers\Mailer;
+use Helpers\Model;
+use Helpers\Mysql;
 use Helpers\Session;
 
 class Home extends \App\BaseController
