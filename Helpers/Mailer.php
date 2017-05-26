@@ -66,6 +66,7 @@ class Mailer
 
         // Prepare the email
         $mail = self::getInstance();
+        $mail->clearAddresses();
         $mail->addAddress($to_email, $to_name);
         $mail->isHTML(true);
         $mail->Subject = $subject;
