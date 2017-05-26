@@ -63,6 +63,8 @@ class Cache
      */
     public static function getPrefix()
     {
+        self::getInstance();
+
         return self::$prefix;
     }
 
