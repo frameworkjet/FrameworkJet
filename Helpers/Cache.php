@@ -84,6 +84,9 @@ class Cache
      */
     public static function deleteMulti($keys, $time = 0)
     {
+        $prefix = self::$prefix;
+        $keys = array_map(function($val) use ($prefix) { return $prefix.$val; }, $keys);
+
         self::getInstance()->deleteMulti($keys, $time);
     }
 
