@@ -80,13 +80,13 @@ var dataManager = {
         $.ajax(request_package).done(function(data, statusText, xhr) {
             onSuccessCallback(data, xhr.status);
             that.endAjaxCall();
-        }).fail(function(data, statusText, xhr){
-            onFailureCallback(data, xhr.status);
+        }).fail(function(data){
+            onFailureCallback($.parseJSON(data.responseText), data.status);
             that.endAjaxCall();
         });
     },
-    ajaxFileTransfer: function(url, input_data, onSuccessCallback, onFailureCallback, contentInstance) {
-		/* Usage:
+    ajaxFileTransfer: function(url, method, input_data, onSuccessCallback, onFailureCallback, contentInstance) {
+        /* Usage:
             var file_data = $('#ID_OF_THE_FILE_INPUT').prop('files')[0];
 
             if(file_data != undefined) {
@@ -101,7 +101,7 @@ var dataManager = {
                 });
             }
         */
-		
+
         if (typeof onSuccessCallback == 'undefined') {
             onSuccessCallback = function(){};
         }
@@ -117,11 +117,11 @@ var dataManager = {
         }
 
         that = this;
-        that.startAjaxCall();        
+        that.startAjaxCall();
 
         // Prepare the request
         var request_package = {
-            type: 'POST',
+            type: method,
             url: that.urlPrefix + url,
             data: input_data,
             contentType: false,
