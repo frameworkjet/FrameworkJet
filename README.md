@@ -194,7 +194,7 @@ Go to Config/Cache.php. This file contains the credentials required by the frame
 Go to Config/SqlDatabase.php. This file contains the credentials required by the framework to connect to the SQL server.
 
 ### Front-end application
-Go to public/js/app.js and set up the following:
+Go to public/js/config.js and set up the following:
 ```js
 ...
 	"data_manager": {
