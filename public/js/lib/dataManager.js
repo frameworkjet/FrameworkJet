@@ -80,8 +80,60 @@ var dataManager = {
         $.ajax(request_package).done(function(data, statusText, xhr) {
             onSuccessCallback(data, xhr.status);
             that.endAjaxCall();
-        }).fail(function(data, statusText, xhr){
-            onFailureCallback(data, xhr.status);
+        }).fail(function(data){
+            onFailureCallback($.parseJSON(data.responseText), data.status);
+            that.endAjaxCall();
+        });
+    },
+    ajaxFileTransfer: function(url, method, input_data, onSuccessCallback, onFailureCallback, contentInstance) {
+        /* Usage:
+            var file_data = $('#ID_OF_THE_FILE_INPUT').prop('files')[0];
+
+            if(file_data != undefined) {
+                var input_data = new FormData();
+                input_data.append('file', file_data);
+                input_data.append("VAR_NAME", VALUE_OF_THE_VAR);
+
+                dataManager.connect('mapper').ajaxFileTransfer('/SOME-URL/json', input_data, function(data, http_code){
+                    console.log(data);
+                }, function(data, http_code){
+                    // None
+                });
+            }
+        */
+
+        if (typeof onSuccessCallback == 'undefined') {
+            onSuccessCallback = function(){};
+        }
+
+        if (typeof onFailureCallback == 'undefined') {
+            onFailureCallback = function(){
+                //console.log('Error! The ajax call was unsuccessful.');
+            };
+        }
+
+        if (typeof contentInstance != 'undefined') {
+            this.contentInstance = contentInstance;
+        }
+
+        that = this;
+        that.startAjaxCall();
+
+        // Prepare the request
+        var request_package = {
+            type: method,
+            url: that.urlPrefix + url,
+            data: input_data,
+            contentType: false,
+            processData: false
+        }
+
+        // Send request
+        $.ajax(request_package).done(function(data, statusText, xhr) {
+            onSuccessCallback(data, xhr.status);
+            that.endAjaxCall();
+        }).fail(function(data){
+            onFailureCallback($.parseJSON(data.responseText), data.status);
             that.endAjaxCall();
         });
     },

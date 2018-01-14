@@ -63,6 +63,8 @@ class Cache
      */
     public static function getPrefix()
     {
+        self::getInstance();
+
         return self::$prefix;
     }
 
@@ -82,6 +84,9 @@ class Cache
      */
     public static function deleteMulti($keys, $time = 0)
     {
+        $prefix = self::getPrefix();
+        $keys = array_map(function($val) use ($prefix) { return $prefix.$val; }, $keys);
+
         self::getInstance()->deleteMulti($keys, $time);
     }
 
