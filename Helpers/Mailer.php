@@ -71,6 +71,7 @@ class Mailer
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body = $body;
+		$mail->AltBody = strip_tags($body);
 
         if (!$mail->send()) {
             Log::alert('mailer', 'The email messages has not been sent. To: '.$to_email.', Subject: '.$subject);
