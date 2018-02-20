@@ -88,7 +88,7 @@ To install the framework, follow the steps below. During the installation we wil
 ## Checkout
 Checkout the project on your machine:
 ```
-git clone https://github.com/pavel-tashev/FrameworkJet.git
+git clone https://github.com/frameworkjet/FrameworkJet
 ```
 For the current example, the name of the directory where we will clone and install the project is “example”.
 
@@ -194,7 +194,7 @@ Go to Config/Cache.php. This file contains the credentials required by the frame
 Go to Config/SqlDatabase.php. This file contains the credentials required by the framework to connect to the SQL server.
 
 ### Front-end application
-Go to public/js/app.js and set up the following:
+Go to public/js/config.js and set up the following:
 ```js
 ...
 	"data_manager": {
