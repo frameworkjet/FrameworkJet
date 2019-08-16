@@ -71,7 +71,13 @@ class Mailer
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body = $body;
-		$mail->AltBody = strip_tags($body);
+	$mail->AltBody = strip_tags($body);
+	$mail->SMTPOptions = array(
+		'ssl' => array(
+			'verify_peer' => false,
+			'verify_peer_name' => false,
+			'allow_self_signed' => true
+		));
 
         if (!$mail->send()) {
             Log::alert('mailer', 'The email messages has not been sent. To: '.$to_email.', Subject: '.$subject);
