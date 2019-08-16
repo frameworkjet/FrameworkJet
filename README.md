@@ -88,7 +88,7 @@ To install the framework, follow the steps below. During the installation we wil
 ## Checkout
 Checkout the project on your machine:
 ```
-git clone https://github.com/pavel-tashev/FrameworkJet.git
+git clone https://github.com/frameworkjet/FrameworkJet
 ```
 For the current example, the name of the directory where we will clone and install the project is “example”.
 
